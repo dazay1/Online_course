@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Slider from "./Slider";
 import { FcGoogle } from "react-icons/fc";
 import axios from "axios";
@@ -7,7 +7,8 @@ function SignUp() {
   const history = useNavigate();
 
   const [isAuthorized, setIsAuthorized] = useState(false);
-  const [fullName, setFullName] = useState("");
+  const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [checked, setChecked] = useState(false);
@@ -16,7 +17,8 @@ function SignUp() {
     e.preventDefault();
 
     const info = {
-      fullName,
+      name,
+      surname,
       email,
       password,
     };
@@ -32,13 +34,13 @@ function SignUp() {
       });
       const data = await response.json();
       console.log(data);
-      
-      setIsAuthorized(true);
+
       if (data.message) {
         alert(data.message);
-        // history("/login", { state: { id: email } });
+        history("/login", { state: { id: email } });
       } else {
         history("/", { state: { id: email } });
+        setIsAuthorized(true);
       }
       console.log(data, isAuthorized);
     } catch (error) {
@@ -78,13 +80,23 @@ function SignUp() {
                 </div>
                 <form className="sign-up_auth__list" onSubmit={onRegisterFrom}>
                   <div className="sign-up_auth__item">
-                    <p className="sign-up_auth__item-title">Full Name</p>
+                    <p className="sign-up_auth__item-title">Name</p>
                     <input
                       className="sign-up_auth__item-input"
                       type="text"
                       placeholder="Enter your Name"
-                      value={fullName}
-                      onChange={(e) => setFullName(e.target.value)}
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                    />
+                  </div>
+                  <div className="sign-up_auth__item">
+                    <p className="sign-up_auth__item-title">Surname</p>
+                    <input
+                      className="sign-up_auth__item-input"
+                      type="text"
+                      placeholder="Enter your Name"
+                      value={surname}
+                      onChange={(e) => setSurname(e.target.value)}
                     />
                   </div>
                   <div className="sign-up_auth__item">

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // import comment from "../assets/comment.png";
 import Slider from "./Slider";
 import { FcGoogle } from "react-icons/fc";
@@ -9,27 +9,30 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [checked, setChecked] = useState(false);
-  const [isAuthorized, setIsAuthorized] = useState(false)
+  const [isAuthorized, setIsAuthorized] = useState(false);
 
   const history = useNavigate();
 
   const onSubmitForm = async (e) => {
     e.preventDefault();
 
-    const body = {email, password}; 
+    const body = { email, password };
     console.log(body);
-    setIsAuthorized(true)
-    try { 
+    try {
       const response = await fetch("http://localhost:5000/api/user/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
       const data = await response.json();
-      
+      console.log(data);
+
       if (data.email) {
         // or data.userFound, depending on your API response
         history("/", { state: { id: email } });
+        setIsAuthorized(!isAuthorized);
+        console.log(isAuthorized);
+        
       } else {
         alert("User does not exist");
       }
