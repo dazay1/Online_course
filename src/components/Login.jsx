@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 // import comment from "../assets/comment.png";
 import Slider from "./Slider";
 import { FcGoogle } from "react-icons/fc";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 function Login() {
   // const [fullName, setFullName] = useState("");
@@ -25,11 +24,12 @@ function Login() {
         body: JSON.stringify(body),
       });
       const data = await response.json();
-      console.log(data);
+      console.log(data.id);
 
+      const id = data.id;
       if (data.email) {
         // or data.userFound, depending on your API response
-        history("/", { state: { id: email } });
+        history(`/user/${id}`, { state: { id: email } });
         setIsAuthorized(!isAuthorized);
         console.log(isAuthorized);
         
