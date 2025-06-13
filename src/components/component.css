@@ -26,17 +26,17 @@
 }
 .navbar-button-1 {
   border: none;
-  background-color: rgba(255, 149, 0, 1);
+  background-color: #ae00ff;
   border-radius: 8px;
   padding: 14px 34px;
   transition: color 0.3s;
 }
 .navbar-button-1:hover {
-  background: rgb(255, 152, 8);
+  background: #ae00ff;
   color: #fff;
 }
 .navbar-button-2 {
-  background: rgba(255, 149, 0, 1);
+  background: #ae00ff;
   padding: 14px 34px;
   border: none;
   color: #fff;
@@ -45,7 +45,7 @@
 }
 .navbar-button-2:hover {
   background-color: transparent;
-  color: #000;
+  color: #ffffff;
 }
 .navbar-box_menu {
   display: flex;
@@ -53,7 +53,7 @@
   align-items: center;
 }
 .active-link {
-  background: rgba(241, 241, 243, 1);
+  background: #ae00ff;
   border-radius: 8px;
   padding: 14px 24px;
 }
@@ -66,7 +66,7 @@
   height: 34px;
 }
 .hamburger-menu_list {
-  background-color: rgba(255, 149, 0, 1);
+  background-color: #ae00ff;
   border-radius: 15px;
 }
 .hamburger-menu_item {
@@ -132,7 +132,7 @@
   justify-content: space-between;
 }
 .sign-up_auth {
-  background: rgba(255, 255, 255, 1);
+  background: #ae00ff;
   border-radius: 12px;
   padding: 50px;
   max-width: 660px;
@@ -144,23 +144,23 @@
   /* width: 100%; */
 }
 .sign-up_auth__item-title {
-  color: rgba(38, 38, 38, 1);
+  color: #ae00ff;
   margin: 24px 0 14px;
 }
 .sign-up_auth__item-input {
   border: none;
   padding: 24px 24px;
-  color: rgba(101, 101, 103, 1);
+  color: #ae00ff;
   width: 100%;
 }
 .sign-up_box__info-title {
   font-size: clamp(28px, 30px, 38px);
   line-height: 1.5;
   font-weight: 500;
-  color: rgba(38, 38, 38, 1);
+  color: #ae00ff;
 }
 .sign-up_box__info-comment {
-  border: 1px solid rgba(241, 241, 243, 1);
+  border: 1px solid #ae00ff;
   background: linear-gradient(0deg, #ffffff, #ffffff),
     linear-gradient(0deg, #f1f1f3, #f1f1f3);
   border-radius: 12px;
@@ -168,7 +168,7 @@
 }
 .sign-up_auth__item-button {
   border: none;
-  background: rgba(255, 149, 0, 1);
+  background: #ae00ff;
   padding: 18px 20px;
   border-radius: 10px;
   color: #fff;
@@ -185,7 +185,7 @@
   align-items: center;
   border: none;
   background: #f7f7f8;
-  color: var(--Grey-15, #262626);
+  color: var(--Grey-15, #ffffff);
   font-weight: 500;
   width: 100%;
   margin: 15px 0;
@@ -196,7 +196,7 @@
   margin-right: 15px;
 }
 .sign-up_auth__item-check {
-  color: var(--Grey-35, #59595a);
+  color: var(--Grey-35, #ffffff);
   text-align: center;
 }
 .sign-up_auth__item-check_input {
@@ -208,14 +208,14 @@
   justify-content: center;
 }
 .sign-up_auth__choose-account {
-  color: var(--Grey-15, #262626);
+  color: var(--Grey-15, #ffffff);
   text-align: center;
   font-weight: 400;
   margin-top: 30px;
 }
 
 .sign-up_auth__choose-account a {
-  color: rgba(255, 149, 0, 1);
+  color: #ae00ff;
   transition: all 4s ease-in;
 }
 .sign-up_auth__choose-account a:hover {
@@ -291,7 +291,7 @@
   width: 100%;
 }
 .slider-info__button {
-  border: 1px solid rgba(241, 241, 243, 1);
+  border: 1px solid #ae00ff;
   background: linear-gradient(0deg, #f1f1f3, #f1f1f3),
     linear-gradient(0deg, #f7f7f8, #f7f7f8);
   padding: 18px 24px;
@@ -333,7 +333,8 @@
 /* Footer */
 .footer {
   margin-top: 150px;
-  background-color: #fff;
+  background-color: #252525;
+  box-shadow: 0 0 100px #00ffd09d;
 }
 .footer-text {
   display: flex;
@@ -341,7 +342,7 @@
   align-items: center;
   margin: 0 auto;
   margin-bottom: 30px;
-  color: rgba(101, 101, 103, 1);
+  color: #ae00ff;
 }
 .footer-box {
   display: flex;
@@ -379,7 +380,7 @@
 .footer-box_item__list-link {
   font-size: 18px;
   line-height: 1.5;
-  color: rgba(89, 89, 90, 1);
+  color: #ae00ff;
   width: 100%;
 }
 .footer-box_item__list-social {
@@ -388,7 +389,7 @@
 }
 .footer-box_item__list-item {
   padding: 14px;
-  border: 1px solid rgba(241, 241, 243, 1);
+  border: 1px solid #ae00ff;
   background: linear-gradient(0deg, #f1f1f3, #f1f1f3),
     linear-gradient(0deg, #f7f7f8, #f7f7f8);
   margin-right: 14px;

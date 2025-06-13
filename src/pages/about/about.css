@@ -9,6 +9,8 @@
 }
 .about-info__box_text {
   width: 748px;
+  color: #ffffff;
+  text-shadow: 0 0 10px #00ffd0;
 }
 @media (max-width: 992px) {
   .about-info__box {
@@ -41,13 +43,17 @@
 }
 .achievement-item {
   border-radius: 12px;
-  background: var(--Absolute-White, #fff);
+  background: linear-gradient(150deg, #8c00ff, #8c00ff46,transparent,#00ffd01f, #00ffd09c);
+  box-shadow: 0 0 10px #00ffd0;
   padding: 50px;
   width: 785px;
 }
+.achievement-item:hover {
+  box-shadow: 0 0 50px #00ffd0;
+}
 .achievement-item__img {
   border-radius: 8px;
-  background: var(--Orange-97, #fff9f0);
+  background: var(--Orange-97, #00ffd0);
   padding: 16px;
   width: 66px;
 }
@@ -60,10 +66,20 @@
   font-size: 24px;
   font-weight: 500;
   line-height: 1.5;
-  color: var(--Grey-15, #262626);
+  color: var(--Grey-15, #ffffff);
   margin-top: 30px;
 }
-
+.achievement-item__text{
+  color: #b4b4b4;
+}
+.achievement-info__text{
+  color: #ffffff;
+  text-shadow: 0 0 10px #00ffd0;
+}
+.goal-info__text{
+  color: #ffffff;
+  text-shadow: 0 0 10px #00ffd0;
+}
 @media (max-width: 1600px) {
   .achievement-list {
     justify-content: center;

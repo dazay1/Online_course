@@ -29,14 +29,20 @@
   }
   .course-info__box_text {
     width: 100%;
+    color: #00ffd0;
   }
 }
-
+.course-info__box_text{
+  color: white;
+  text-shadow: 0 0 10px #00ffd0;
+}
 /* section-2 information */
 .course-card__box {
   padding: 50px;
   border-radius: 12px;
-  background: var(--Absolute-White, #FFF);
+  background: var(--Absolute-White, #00ffd01c);
+  box-shadow: 0 0 30px #00ffd0;
+  border: 5px solid white;
 }
 .course-card__box__description {
   margin-top: 30px;
@@ -58,25 +64,36 @@
   display: flex;
   gap: 0 30px;
 }
+.course-card__box__description_text-data{
+  color:white;
+}
+.course-card__box__description_text-level{
+  color:white;
+}
+.course-card__box__description_text-author{
+  color:#00ffd0;
+}
 .course-card__box__description_title {
   margin-top: 50px;
   padding: 24px 30px;
   font-size: 22px;
   font-weight: 600;
   line-height: 1.5;
+  color: #ae00ff;
 }
 .course-card__box__description_list {
   padding: 30px 50px;
   justify-content: space-between;
   display: flex;
   gap: 0 100px;
+  color:rgba(255, 255, 255, 0.692);
 }
 .course-card__box__description_item-number {
   font-weight: 800;
 }
 .course-card__box__description_item-title {
   margin-top: 10px;
-  color: var(--Grey-20, #333);
+  color: var(--Grey-20, #ffffff);
   font-size: 18px;
   font-weight: 500;
   line-height: 1.5;

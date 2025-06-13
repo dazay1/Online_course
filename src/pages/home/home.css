@@ -18,8 +18,10 @@
   justify-content: center;
   align-items: center;
   gap: 10px;
-  border-radius: 11px;
-  background: var(--White-99, #fcfcfd);
+  border-radius: 50px;
+  background: var(--White-99, #00ffd042);
+  border: 3px solid var(--White-95, #ffffff);
+  box-shadow: 0 0 100px #00ffd0;
 }
 
 .begin-box__title_icon {
@@ -28,7 +30,7 @@
   justify-content: center;
   align-items: center;
   border-radius: 6px;
-  background: var(--Orange-95, #fff4e5);
+  background: var(--Orange-95, #00ffd0);
 }
 .icon {
   width: 34px;
@@ -36,11 +38,12 @@
 }
 
 .begin-box__title_text span {
-  color: var(--Orange-50, #ff9500);
+  color: var(--Orange-50, #8c00ff);
 }
 
 .begin-box__description {
-  color: var(--Grey-15, #262626);
+  color: white;
+  text-shadow: 0 0 20px #00ffd0;
   text-align: center;
   font-size: 38px;
   font-weight: 500;
@@ -49,7 +52,7 @@
 
 .begin-box__text {
   font-size: 18px;
-  color: var(--Grey-15, #262626);
+  color: var(--Grey-15, #00ffd0);
   font-weight: 400;
 }
 
@@ -64,7 +67,7 @@
   padding: 18px 24px;
   justify-content: center;
   align-items: center;
-  background: var(--Orange-50, #ff9500);
+  background: var(--Orange-50, #8c00ff);
   border-radius: 8px;
   border: none;
 }
@@ -79,8 +82,9 @@
   justify-content: center;
   align-items: center;
   border-radius: 8px;
-  background: var(--Absolute-White, #fff);
-  border: none;
+  background: var(--Absolute-White, #00ffd04d);
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 20px #00ffd0;
 }
 
 .begin-icons {
@@ -96,6 +100,9 @@
   justify-content: center;
   align-items: center;
   padding: 30px 60px;
+}
+.begin-icons__item img{
+  filter: brightness(0) invert(1) drop-shadow(0 0 10px #00ffd0);
 }
 @media (max-width: 1400px) {
   .begin-icons {
@@ -142,28 +149,37 @@
 }
 .box__info_description-text {
   max-width: 1177px;
+  color: #c4c4c4;
 }
 .box__info_description-button {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: none;
-  padding: 18px 24px;
+  border: 2px solid white;
+  padding: 14px 24px;
+  background-color: #00ffd054;
+  box-shadow: 0 0 20px #00ffd0;
   border-radius: 8px;
+}
+.box__info_description-button-2 a{
+  color: #8c00ff;
 }
 .benefits-box__list {
   display: grid;
   grid-template-columns: repeat(3, max-content);
   gap: 20px;
   margin-top: 80px;
+  color: white;
 }
 .benefits-box__item {
   display: flex;
   flex-direction: column;
   gap: 50px;
   padding: 50px;
-  background: var(--Absolute-White, #fff);
+  background: linear-gradient(150deg, #8c00ff, #8c00ff46,transparent,#00ffd023, #00ffd09c);
+  /* box-shadow: 0 0 px #00ffd0; */
   max-width: 519px;
+  border-radius: 20px;
 }
 .benefits-box__item_number {
   display: flex;
@@ -174,11 +190,13 @@
   font-size: 24px;
   font-weight: 600;
   line-height: 1.5;
-  color: var(--Grey-20, #333);
+  color: white;
 }
 .benefits-box__item_text {
   font-weight: 400;
   font-size: 18px;
+  color: #00ffd0;
+  font-weight: 200;
 }
 .benefits-box__item_icon {
   display: flex;
@@ -190,7 +208,7 @@
 .benefits-box__item_icon-img {
   width: 34px;
   height: 34px;
-  color: rgba(255, 149, 0, 1);
+  color: #8c00ff;
 }
 
 @media (max-width: 1600px) {
@@ -280,8 +298,10 @@
   gap: 30px;
 }
 .course-information__item {
-  background: var(--Absolute-White, #fff);
+  background: linear-gradient(50deg, #8c00ff, #8c00ff46,transparent,#00ffd01f, #00ffd09c);
+  box-shadow: 0 0 50px #00ffd0;
   max-width: 785px;
+  border-radius: 30px;
   padding: 50px;
 }
 .course-information__item_description {
@@ -297,12 +317,12 @@
   font-size: 20px;
   font-weight: 500;
   line-height: 1.5;
-  color: var(--Grey-15, #262626);
+  color: var(--Grey-15, #00ffd0);
 }
 .course-information__item_title {
   font-size: 24px;
   font-weight: 600;
-  color: var(--Grey-15, #262626);
+  color: var(--Grey-15, #ffffff);
   line-height: 1.5;
 }
 .course-information__item_button {
@@ -311,13 +331,14 @@
   align-items: center;
   padding: 18px 24px;
   border-radius: 8px;
-  border: 1px solid var(--White-95, #f1f1f3);
-  background: var(--White-97, #f7f7f8);
+  border: 1px solid var(--White-95, #00ffd0);
+  background: var(--White-97, #00ffd023);
   width: 100%;
+  color: #00ffd0;
   margin-top: 30px;
 }
 .course-information__item_button p {
-  color: var(--Grey-15, #262626);
+  color: var(--Grey-15, #0000007c);
 }
 @media (max-width: 1600px) {
   .course-information__list {
@@ -371,14 +392,21 @@
 .testimonials-item {
   max-width: 785px;
   padding: 50px 50px 30px;
-  background: var(--Absolute-White, #fff);
+  background: var(--Absolute-White, #00ffd056);
+  box-shadow: 0 0 30px #00ffd0;
+  border: 3px solid white;
+}
+.testimonials-item p{
+  color: white;
 }
 .testimonials-info {
   display: flex;
   justify-content: space-between;
   margin-top: 60px;
+  color: #8c00ff;
 }
 .testimonials-info_text {
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -389,13 +417,13 @@
   font-size: 18px;
   font-weight: 600;
   line-height: 1.5;
-  color: var(--Grey-20, #333);
+  color: var(--Grey-20, #ffffff);
 }
 .testimonials-info__button {
   border: none;
-  padding: 18px 24px;
+  padding: 12px 24px;
   border-radius: 8px;
-  background: var(--White-97, #f7f7f8);
+  background: var(--White-97, #f7f7f891);
 }
 @media (max-width: 1600px) {
   .testimonials-list {
@@ -467,7 +495,7 @@
   justify-content: center;
   border-radius: 6px;
   border: none;
-  background-color: var(--Orange-50, #FF9500);
+  background-color: var(--Orange-50, #8c00ff);
   padding: 14px 30px;
 }
 .box__info_description-button-1__link {
@@ -491,7 +519,7 @@
   padding: 80px;
   gap: 0 30px;
   border-radius: 12px;
-  background: var(--Absolute-White, #FFF);  
+  /* background: var(--Absolute-White, #FFF);   */
   margin-top: 80px;
 }
 .price-information__item {
@@ -501,23 +529,28 @@
   text-align: center;
   padding: 50px 30px 30px;
   border-radius: 12px;
-  background: var(--White-99, #FCFCFD);
-  border: 1px solid var(--White-95, #F1F1F3);
+    background: linear-gradient(150deg, #8c00ff, #8c00ff46,transparent,#00ffd01f, #00ffd09c);
+  box-shadow: 0 0 50px #00ffd0;
+  border: 2px solid var(--White-95, #ffffff);
   gap: 50px 0;
+  color: white;
   width: 705px;
 }
 .price-information__item_plan {
   padding: 12px 22px;
   border-radius: 6px;
-  background: var(--Orange-97, #FFF9F0);
+  background: var(--Orange-97, #00ffd0);
   width: 100%;
 }
 .price-information__item_price {
+
   display: flex;
 }
 .price-information__item_price-data {
   position: relative;
   bottom: -15px;
+  color: white;
+  text-shadow: 0 0 15px #00ffd0;
 }
 .price-information__item_item {
   display: flex;
@@ -529,7 +562,7 @@
 .price-infomation__item_item-box {
   padding: 6px;
   border-radius: 6px;
-  background: var(--Orange-95, #FFF4E5);
+  background: var(--Orange-95, #00ffd0);
 }
 .price-information__item_item-box__icon {
   width: 20px;
@@ -537,10 +570,12 @@
 }
 .price-information__item_item-text {
   margin: auto 20px;
+  color: white;
+  text-shadow: 0 0 15px #00ffd0;
 }
 .price-information__button {
   padding: 18px 24px;
-  background: var(--Orange-50, #FF9500);
+  background: var(--Orange-50, #8c00ff);
   border-radius: 0px 0px 8px 8px;
   border: none;
   width: 100%;
@@ -601,8 +636,10 @@
   display: flex;
   padding: 100px;
   border-radius: 12px;
-  background: var(--Absolute-White, #FFF);
+  background: linear-gradient(230deg, #8c00ff, #8c00ff46,transparent,#00ffd01f, #00ffd09c);
+  box-shadow: 0 0 50px #00ffd0;
   gap: 0 120px;
+  color: white;
 }
 .famouse-box__list {
   padding: 50px;
@@ -625,7 +662,8 @@
   width: 164px;
   padding: 18px 24px;
   border-radius: 8px;
-  border: 1px solid var(--White-95, #F1F1F3);
+  color: #00ffd0;
+  border: 1px solid var(--White-95, #00ffd0);
   background-color: transparent;
 }
 .famouse-box__item_info-title {
@@ -638,7 +676,7 @@
 }
 .famouse-box__item_info-icon {
   padding: 12px;
-  background: var(--Orange-95, #FFF4E5);
+  background: var(--Orange-95, #00ffd0);
   border-radius: 8px;
   display: flex;
   justify-content: center;
