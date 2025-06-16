@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 // import comment from "../assets/comment.png";
 import Slider from "./Slider";
-import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setUserInfo } from './userSlice';
 function Login() {
   // const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [checked, setChecked] = useState(false);
   const [isAuthorized, setIsAuthorized] = useState(false);
-
+  
+  const dispatch = useDispatch();
   const history = useNavigate();
 
   const onSubmitForm = async (e) => {
@@ -24,13 +26,15 @@ function Login() {
         body: JSON.stringify(body),
       });
       const data = await response.json();
+      dispatch(setUserInfo(data))
       console.log(data.id);
 
       const id = data.id;
       if (data.email) {
         // or data.userFound, depending on your API response
-        history(`/user/${id}`, { state: { id: email } });
-        setIsAuthorized(!isAuthorized);
+        // history(`/user/${id}`, { state: { id: email } });
+        // setIsAuthorized(!isAuthorized);
+        history("/profile", { state: { id: email } });
         console.log(isAuthorized);
         
       } else {
@@ -40,6 +44,7 @@ function Login() {
       console.log(error);
     }
   };
+  
   return (
     <>
       <section className="login">
@@ -103,12 +108,6 @@ function Login() {
                   Login
                 </button>
               </form>
-              <p className="sign-up_auth__choose">OR</p>
-
-              <button className="sign-up_auth__choose-button">
-                <FcGoogle className="sign-up_auth__choose-icon" />
-                Login with Google
-              </button>
               <p className="sign-up_auth__choose-account">
                 Already have an account? <a href="/sign-up">Sign Up</a>
               </p>

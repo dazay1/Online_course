@@ -41,8 +41,10 @@
   padding: 50px;
   border-radius: 12px;
   background: var(--Absolute-White, #00ffd01c);
-  box-shadow: 0 0 30px #00ffd0;
   border: 5px solid white;
+}
+.course-card__box:hover {
+  box-shadow: 0 0 30px #00ffd0;
 }
 .course-card__box__description {
   margin-top: 30px;

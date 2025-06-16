@@ -84,6 +84,9 @@
   border-radius: 8px;
   background: var(--Absolute-White, #00ffd04d);
   border: 2px solid #ffffff;
+  /* box-shadow: 0 0 20px #00ffd0; */
+}
+.begin-box__button-2:hover {
   box-shadow: 0 0 20px #00ffd0;
 }
 
@@ -101,7 +104,7 @@
   align-items: center;
   padding: 30px 60px;
 }
-.begin-icons__item img{
+.begin-icons__item img:hover{
   filter: brightness(0) invert(1) drop-shadow(0 0 10px #00ffd0);
 }
 @media (max-width: 1400px) {
@@ -158,8 +161,10 @@
   border: 2px solid white;
   padding: 14px 24px;
   background-color: #00ffd054;
-  box-shadow: 0 0 20px #00ffd0;
   border-radius: 8px;
+}
+.box__info_description-button:hover {
+  box-shadow: 0 0 20px #00ffd0;
 }
 .box__info_description-button-2 a{
   color: #8c00ff;
@@ -299,10 +304,12 @@
 }
 .course-information__item {
   background: linear-gradient(50deg, #8c00ff, #8c00ff46,transparent,#00ffd01f, #00ffd09c);
-  box-shadow: 0 0 50px #00ffd0;
   max-width: 785px;
   border-radius: 30px;
   padding: 50px;
+}
+.course-information__item:hover {
+  box-shadow: 0 0 50px #00ffd0;
 }
 .course-information__item_description {
   margin: 30px 0;
@@ -393,8 +400,10 @@
   max-width: 785px;
   padding: 50px 50px 30px;
   background: var(--Absolute-White, #00ffd056);
-  box-shadow: 0 0 30px #00ffd0;
   border: 3px solid white;
+}
+.testimonials-item:hover {
+  box-shadow: 0 0 50px #00ffd0;
 }
 .testimonials-item p{
   color: white;
@@ -530,11 +539,13 @@
   padding: 50px 30px 30px;
   border-radius: 12px;
     background: linear-gradient(150deg, #8c00ff, #8c00ff46,transparent,#00ffd01f, #00ffd09c);
-  box-shadow: 0 0 50px #00ffd0;
   border: 2px solid var(--White-95, #ffffff);
   gap: 50px 0;
   color: white;
   width: 705px;
+}
+.price-information__item:hover {
+  box-shadow: 0 0 50px #00ffd0;
 }
 .price-information__item_plan {
   padding: 12px 22px;
@@ -637,9 +648,11 @@
   padding: 100px;
   border-radius: 12px;
   background: linear-gradient(230deg, #8c00ff, #8c00ff46,transparent,#00ffd01f, #00ffd09c);
-  box-shadow: 0 0 50px #00ffd0;
   gap: 0 120px;
   color: white;
+}
+.famouse-box:hover {
+  box-shadow: 0 0 50px #00ffd0;
 }
 .famouse-box__list {
   padding: 50px;

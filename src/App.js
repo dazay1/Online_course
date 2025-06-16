@@ -10,7 +10,7 @@ import "./App.css";
 import SignUp from "./components/SignUp";
 import Login from "./components/Login";
 import CourseOpen from "./pages/courses/CourseOpen";
-import UserPage from "./components/UserPage";
+import Profile from "./components/Profile";
 function App() {
   return (
     <>
@@ -24,7 +24,7 @@ function App() {
           <Route path="/price" element={<Pricing />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/user/:id" element={<UserPage />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />

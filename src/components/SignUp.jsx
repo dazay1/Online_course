@@ -40,9 +40,7 @@ function SignUp() {
         history("/login", { state: { id: email } });
       } else {
         history("/", { state: { id: email } });
-        setIsAuthorized(true);
       }
-      console.log(data, isAuthorized);
     } catch (error) {
       console.error(error);
     }
@@ -119,25 +117,8 @@ function SignUp() {
                       onChange={(e) => setPassword(e.target.value)}
                     />
                   </div>
-                  <div className="sign-up_auth__item">
-                    <label className="sign-up_auth__item-check">
-                      <input
-                        type="checkbox"
-                        className="sign-up_auth__item-check_input"
-                        value={checked}
-                        onChange={(e) => setChecked(e.target.value)}
-                      />
-                      I agree with Terms of Use and Privacy Policy
-                    </label>
-                  </div>
                   <button className="sign-up_auth__item-button">Sign Up</button>
                 </form>
-                <p className="sign-up_auth__choose">OR</p>
-
-                <button className="sign-up_auth__choose-button">
-                  <FcGoogle className="sign-up_auth__choose-icon" /> Sign Up
-                  with Google
-                </button>
                 <p className="sign-up_auth__choose-account">
                   Already have an account? <a href="/login">Login</a>
                 </p>

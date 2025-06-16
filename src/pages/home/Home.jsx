@@ -13,7 +13,6 @@ import {
   ourCourseList,
   sliderList,
 } from "./index";
-import main from "../../assets/main.png";
 
 import "./home.css";
 function Home() {
@@ -59,7 +58,6 @@ function Home() {
               );
             })}
           </ul>
-          <img src={main} alt="" />
         </div>
       </section>
       <section className="benefits">
@@ -304,16 +302,6 @@ function Home() {
                   {openCardIndex === index && (
                     <div className="famouse-box__item_box">
                       <p className="famouse-box__item_text">{card.answer}</p>
-                      <div className="famouse-box__item_more">
-                        <h5 className="famouse-box__item_more-title">
-                          More information about our Courses
-                        </h5>
-                        <div className="famouse-box__item_more-arrow">
-                          <a href="/courses">
-                            <GoArrowRight />
-                          </a>
-                        </div>
-                      </div>
                     </div>
                   )}
                 </li>

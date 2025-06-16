@@ -1,19 +1,33 @@
 import React, { useState } from "react";
 import { navList } from "./index";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import logo from "../assets/logo.svg";
 import { HiMenuAlt3 } from "react-icons/hi";
 import { IoCloseSharp } from "react-icons/io5";
 import "./component.css";
-import Profile from "./Profile";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
 function Navbar() {
   const location = useLocation();
   const pathname = location.pathname;
 
+  const [isAuthorized, setIsAuthorized] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
+
+  const { userInfo } = useSelector((state) => state.userLogin);
+  console.log(userInfo);
+
+  const id = userInfo ? userInfo.id : null;
+  console.log(id);
+
+  useEffect(() => {
+    if (id) setIsAuthorized(true);
+  }, [isAuthorized, id]);
+  console.log(isAuthorized);
 
   return (
     <>
@@ -42,18 +56,16 @@ function Navbar() {
               </ul>
             </div>
             <div className="navbar-box_menu">
-              {/* <div className="navbar-button">
-                <a href="/sign-up">
-                  <button className="navbar-button-1">Sign Up</button>
-                </a>
-                <a href="/login">
-                  <button className="navbar-button-2">Login</button>
-                </a>
-              </div> */}
               <div className="navbar-button">
-                <a href="/sign-up">
-                  <button className="navbar-button-1">Getting Started</button>
-                </a>
+                {isAuthorized ? (
+                  <Link to={`/profile`}>
+                    <button className="navbar-button-1">Profile</button>
+                  </Link>
+                ) : (
+                  <Link to="/sign-up">
+                    <button className="navbar-button-1">Getting Started</button>
+                  </Link>
+                )}
               </div>
               <div className="hamburger-menu">
                 {isOpen ? (
