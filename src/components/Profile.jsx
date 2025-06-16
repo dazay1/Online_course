@@ -1,9 +1,7 @@
 import React from "react";
 import { useSelector } from 'react-redux';
 function Profile() {
-  const { userInfo } = useSelector((state) => state.userLogin);
-  console.log(userInfo.name);
-  
+  const { userInfo } = useSelector((state) => state.userLogin);  
   return (
     <div>
       <h1>User Profile</h1>

@@ -11,6 +11,7 @@ import SignUp from "./components/SignUp";
 import Login from "./components/Login";
 import CourseOpen from "./pages/courses/CourseOpen";
 import Profile from "./components/Profile";
+import ProtectedRouter from "./components/ProtectedRouter";
 function App() {
   return (
     <>
@@ -24,8 +25,11 @@ function App() {
           <Route path="/price" element={<Pricing />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/profile" element={<Profile />} />
           <Route path="*" element={<NotFound />} />
+          {/* ********** PRIVATE PUBLIC ROUTES ********** */}
+          <Route element={<ProtectedRouter />}>
+            <Route path="/profile" element={<Profile />} />
+          </Route>
         </Routes>
         <Footer />
       </Router>

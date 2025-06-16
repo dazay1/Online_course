@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { navList } from "./index";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import logo from "../assets/logo.svg";
 import { HiMenuAlt3 } from "react-icons/hi";
 import { IoCloseSharp } from "react-icons/io5";
@@ -19,15 +19,11 @@ function Navbar() {
   };
 
   const { userInfo } = useSelector((state) => state.userLogin);
-  console.log(userInfo);
-
   const id = userInfo ? userInfo.id : null;
-  console.log(id);
 
   useEffect(() => {
     if (id) setIsAuthorized(true);
   }, [isAuthorized, id]);
-  console.log(isAuthorized);
 
   return (
     <>
