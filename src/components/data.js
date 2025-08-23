@@ -1,0 +1,198 @@
+import c1 from '../assets/images/c1.jpg'
+import c2 from '../assets/images/c2.jpg'
+import c3 from '../assets/images/c3.jpg'
+import c4 from '../assets/images/c4.jpg'
+import c5 from '../assets/images/c5.jpg'
+import c6 from '../assets/images/c6.jpg'
+import ui from '../assets/images/ui-1.png'
+export const coursesData = [
+  {
+    id: 1,
+    image: c1,
+    title: "Javascript asoslari",
+    price: 49.99,
+    author: "John Doe",
+    reviewNumber: 450,
+    lessons: 20,
+    students: 150,
+    category: "Programming",
+  },
+  {
+    id: 2,
+    image: c2,
+    title: "Python ",
+    price: 69.99,
+    author: "Jane Smith",
+    reviewNumber: 670,
+    lessons: 25,
+    students: 120,
+    category: "Programming",
+  },
+  {
+    id: 3,
+    image: c3,
+    title: "UI/UX Design asoslari",
+    price: 59.99,
+    author: "Emily Johnson",
+    reviewNumber: 460,
+    lessons: 30,
+    students: 90,
+    category: "Design",
+  },
+  {
+    id: 4,
+    image: ui,
+    title: "Figma",
+    price: 55.99,
+    author: "Michael Brown",
+    reviewNumber: 440,
+    lessons: 18,
+    students: 110,
+    category: "Design",
+  },
+  {
+    id: 5,
+    image: c5,
+    title: "Full Stack Web kurslari",
+    price: 79.99,
+    author: "Chris Lee",
+    reviewNumber: 480,
+    lessons: 40,
+    students: 200,
+    category: "Programming",
+  },
+  {
+    id: 6,
+    image: c6,
+    title: "Software Testing va QA",
+    price: 45.99,
+    author: "Alex Wilson",
+    reviewNumber: 430,
+    lessons: 22,
+    students: 80,
+    category: "Software",
+  },
+];
+
+export const studentsData = [
+  {
+    id: 1,
+    studentId: "1234567890",
+    name: "John Doe",
+    email: "john@doe.com",
+    photo:
+      "https://images.pexels.com/photos/2888150/pexels-photo-2888150.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    phone: "1234567890",
+    grade: 5,
+    class: "1B",
+    address: "123 Main St, Anytown, USA",
+  },
+  {
+    id: 2,
+    studentId: "1234567890",
+    name: "Jane Doe",
+    email: "jane@doe.com",
+    photo:
+      "https://images.pexels.com/photos/936126/pexels-photo-936126.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    phone: "1234567890",
+    grade: 5,
+    class: "5A",
+    address: "123 Main St, Anytown, USA",
+  },
+  {
+    id: 3,
+    studentId: "1234567890",
+    name: "Mike Geller",
+    email: "mike@geller.com",
+    photo:
+      "https://images.pexels.com/photos/428328/pexels-photo-428328.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    phone: "1234567890",
+    grade: 5,
+    class: "5A",
+    address: "123 Main St, Anytown, USA",
+  },
+  {
+    id: 4,
+    studentId: "1234567890",
+    name: "Jay French",
+    email: "jay@gmail.com",
+    photo:
+      "https://images.pexels.com/photos/1187765/pexels-photo-1187765.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    phone: "1234567890",
+    grade: 5,
+    class: "5A",
+    address: "123 Main St, Anytown, USA",
+  },
+  {
+    id: 5,
+    studentId: "1234567890",
+    name: "Jane Smith",
+    email: "jane@gmail.com",
+    photo:
+      "https://images.pexels.com/photos/1102341/pexels-photo-1102341.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    phone: "1234567890",
+    grade: 5,
+    class: "5A",
+    address: "123 Main St, Anytown, USA",
+  },
+  {
+    id: 6,
+    studentId: "1234567890",
+    name: "Anna Santiago",
+    email: "anna@gmail.com",
+    photo:
+      "https://images.pexels.com/photos/712513/pexels-photo-712513.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    phone: "1234567890",
+    grade: 5,
+    class: "5A",
+    address: "123 Main St, Anytown, USA",
+  },
+  {
+    id: 7,
+    studentId: "1234567890",
+    name: "Allen Black",
+    email: "allen@black.com",
+    photo:
+      "https://images.pexels.com/photos/1438081/pexels-photo-1438081.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    phone: "1234567890",
+    grade: 5,
+    class: "5A",
+    address: "123 Main St, Anytown, USA",
+  },
+  {
+    id: 8,
+    studentId: "1234567890",
+    name: "Ophelia Castro",
+    email: "ophelia@castro.com",
+    photo:
+      "https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    phone: "1234567890",
+    grade: 5,
+    class: "5A",
+    address: "123 Main St, Anytown, USA",
+  },
+  {
+    id: 9,
+    studentId: "1234567890",
+    name: "Derek Briggs",
+    email: "derek@briggs.com",
+    photo:
+      "https://images.pexels.com/photos/842980/pexels-photo-842980.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    phone: "1234567890",
+    grade: 5,
+    class: "5A",
+    address: "123 Main St, Anytown, USA",
+  },
+  {
+    id: 10,
+    studentId: "1234567890",
+    name: "John Glover",
+    email: "john@glover.com",
+    photo:
+      "https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    phone: "1234567890",
+    grade: 5,
+    class: "5A",
+    address: "123 Main St, Anytown, USA",
+  },
+];

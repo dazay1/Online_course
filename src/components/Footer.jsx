@@ -1,119 +1,74 @@
-import React from "react";
 import logo from "../assets/logo.svg";
-import { IoMdMail } from "react-icons/io";
-import { FaPhoneAlt } from "react-icons/fa";
-import { MdLocationOn } from "react-icons/md";
-import { FaFacebook, FaTwitter, FaLinkedin } from "react-icons/fa";
-import { footerAboutList, footerHomeList } from ".";
-function Footer() {
+import {
+  FaFacebook,
+  FaInstagram,
+  FaPhoneAlt,
+  FaTwitter,
+  FaYoutube,
+} from "react-icons/fa";
+const Footer = () => {
   return (
-    <>
-      <section className="footer">
-        <div className="container">
-          <div className="footer-box">
-            <div className="footer-box_info">
-              <a href="/">
-                <img src={logo} alt="" />
-              </a>
-              <div className="footer-box_info__link">
-                <a
-                  className="footer-box_info__link-text"
-                  href="mailto:hello@skillbridge.com"
-                >
-                  <IoMdMail /> hello@skillbridge.com
-                </a>
-                <a
-                  className="footer-box_info__link-text"
-                  href="tel:+9191813232309"
-                >
-                  <FaPhoneAlt /> +91 91813 23 2309
-                </a>
-                <a className="footer-box_info__link-text" href="/">
-                  <MdLocationOn /> Somewhere in the World
-                </a>
-              </div>
+    <div className="pt-20 pb-12 bg-black">
+      <div className="container">
+        {/* Define grid */}
+        <div className="w-[80%] mx-auto grid items-start grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 pb-8 border-b-[1.5px] border-white border-opacity-20">
+          {/* 1st footer part */}
+          <div>
+            <img src={logo} alt="logo" width={100} height={100} />
+            <p className="text-white text-opacity-50">
+              Biz haqimizda ko'pro ma'lumot bilmoqchi bo'lsangiz shu telefon
+              raqamiga murojat qiling.
+            </p>
+            <div className="flex items-center gap-2">
+              <FaPhoneAlt color="white" />
+              <p className="text-[18px] hover:decoration-1 text-white">
+                33-880-03-99
+              </p>
             </div>
-            <div className="footer-box_list">
-              <div className="footer-box_item">
-                <h6 className="footer-box_item__title">
-                  <a href="/">Home</a>
-                </h6>
-                <div className="footer-box_item__list">
-                  {footerHomeList.map((link) => {
-                    return (
-                      <a
-                        className="footer-box_item__list-link"
-                        href={link.route}
-                      >
-                        <p>{link.label}</p>
-                      </a>
-                    );
-                  })}
-                </div>
-              </div>
-              <div className="footer-box_item">
-                <h6 className="footer-box_item__title">
-                  <a href="/about">About Us</a>
-                </h6>
-                <div className="footer-box_item__list">
-                  {footerAboutList.map((link) => {
-                    return (
-                      <a
-                        className="footer-box_item__list-link"
-                        href={link.route}
-                      >
-                        <p>{link.label}</p>
-                      </a>
-                    );
-                  })}
-                </div>
-              </div>
-              <div className="footer-box_item">
-                <h6 className="footer-box_item__title">
-                  <a href="/about">Social Profiles</a>
-                </h6>
-                <div className="footer-box_item__list-social">
-                  <div className="footer-box_item__list-item">
-                    <a
-                      className="footer-box_item__list-social"
-                      href="https://www.facebook.com/"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      <FaFacebook />
-                    </a>
-                  </div>
-                  <div className="footer-box_item__list-item">
-                    <a
-                      className="footer-box_item__list-social"
-                      href="https://twitter.com/"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      <FaTwitter />
-                    </a>
-                  </div>
-                  <div className="footer-box_item__list-item">
-                    <a
-                      className="footer-box_item__list-social"
-                      href="https://www.linkedin.com/"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      <FaLinkedin />
-                    </a>
-                  </div>
-                </div>
-              </div>
+            {/* social link */}
+            <div className="flex items-center space-x-4 mt-6">
+              <FaFacebook className="w-6 h-6 text-blue-600" />
+              <FaTwitter className="w-6 h-6 text-sky-500" />
+              <FaYoutube className="w-6 h-6 text-red-700" />
+              <FaInstagram className="w-6 h-6 text-pink-600" />
             </div>
           </div>
-          <p className="footer-text">
-            © 2023 Skillbridge. All rights reserved.
-          </p>
+          {/* 2nd part */}
+          <div>
+            <h4 className="footer__heading">Popular</h4>
+            <p className="footer__link">Web development</p>
+            <p className="footer__link">Figma</p>
+            <p className="footer__link">UI/Ux Design</p>
+            <p className="footer__link">App Development</p>
+            <p className="footer__link">Desktop Development</p>
+            <p className="footer__link">Digital Marketing</p>
+          </div>
+          {/* 3rd part */}
+          <div>
+            <h4 className="footer__heading">Quick Link</h4>
+            <p className="footer__link">Home</p>
+            <p className="footer__link">About</p>
+            <p className="footer__link">Courses</p>
+            <p className="footer__link">Instructor</p>
+            <p className="footer__link">Profile</p>
+            <p className="footer__link">Privacy Policy</p>
+          </div>
+          {/* 4th part (newsLetter) */}
+          <div>
+            <h1 className="footer__heading">Subscribe our Newsletter</h1>
+            <input
+              type="text"
+              placeholder="Enter your email"
+              className="px-6 py-2 rounded-lg outline-none bg-gray-700 w-full text-white"
+            />
+            <button className="px-6 py-2 mt-4 rounded-lg outline-none bg-rose-700 w-full text-white">
+              Subscribe
+            </button>
+          </div>
         </div>
-      </section>
-    </>
+      </div>
+    </div>
   );
-}
+};
 
 export default Footer;

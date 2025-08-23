@@ -1,6 +1,6 @@
 /* Navbar */
 .navbar {
-  margin-bottom: 100px;
+  margin-bottom: 50px;
 }
 .navbar-box {
   display: flex;
@@ -11,6 +11,7 @@
   display: flex;
   gap: 0 50px;
   align-items: center;
+  color: #f1f1f396;
   /* justify-content: space-between; */
 }
 .navbar-list {
@@ -24,7 +25,7 @@
   background: #ae00ff;
   border-radius: 8px;
   padding: 14px 24px;
-  transition: all 0.2s ;
+  transition: all 0.2s;
 }
 .navbar-button {
   display: flex;
@@ -117,6 +118,64 @@
   .navbar-button-1 {
     padding: 10px;
   }
+}
+/* ===== Sidebar =====*/
+.sidebar-item__link {
+  display: flex;
+  gap: 0 20px;
+  align-items: center;
+  border: none;
+  padding: 14px 24px;
+  border-radius: 40px;
+  margin-bottom: 20px;
+}
+.active {
+  background-color: #0de6db;
+}
+.sidebar-item a {
+  color: white;
+  font-size: 20px;
+}
+/* ===== SidebarAdmin =====*/
+.sidebarAdmin {
+  display: flex;
+  gap: 40px;
+}
+/* ===== Profile =====*/
+.profile {
+  display: flex;
+  gap: 30px;
+}
+.profile-content {
+  width: 100%;
+}
+.profile-info {
+  margin-top: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.profile-info__title {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.profile-info__title h4 {
+  font-size: 50px;
+  color: #ae00ff;
+}
+.profile-info__search {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  padding: 14px 24px;
+  border-radius: 40px;
+  gap: 10px;
+}
+.profile-info__search input {
+  border: none;
+  background-color: transparent;
+  outline: none;
 }
 /* ===== Sign Up =====*/
 .container-small {
@@ -283,7 +342,83 @@
     margin-top: 20px;
   }
 }
+/* Settings */
+.settings {
+  display: flex;
+  gap: 70px;
+}
+.settings-box {
+  width: 100%;
+}
+.settings-box h2 {
+  margin-top: 20px;
+  font-size: 80px;
+}
+.settings-container {
+  margin-top: 80px;
+  background-color: rgba(255, 255, 255, 0.171);
+  border-radius: 20px;
+  width: 100%;
+  padding: 15px 30px;
+}
+.settings-container h4 {
+  font-size: 50px;
+  color: aqua;
+  margin-bottom: 20px;
+}
+.settings-container__box {
+  margin-left: 15px;
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
 
+  gap: 20px;
+}
+.settings-container__box-label {
+  display: flex;
+  gap: 0px 20px;
+  align-items: center;
+}
+.settings-container__box-label h5 {
+  font-size: 30px;
+  font-weight: 600;
+  color: rgb(255, 255, 255);
+  text-align: right;
+}
+.settings-container__box-input {
+  padding: 15px 20px;
+  font-size: 30px;
+  outline: none;
+  background-color: transparent;
+  border: 3px solid aqua;
+  border-radius:20px ;
+  color: white;
+}
+.settings-container__box-button {
+  padding: 15px 20px;
+  font-size: 30px;
+  outline: none;
+  background-color: rgba(0, 255, 255, 0.89);
+  border-radius:20px;
+  color: white;
+  width: 100%;
+  margin-top: 20px;
+}
+.settings-container__box-button__red {
+  background-color: rgba(255, 0, 0, 0.856);
+  padding: 15px 20px;
+  font-size: 30px;
+  outline: none;
+  border-radius:20px;
+  color: white;
+  width: 100%;
+  margin-top: 10px;
+}
+.label-text {
+  font-size: 30px;
+  color: #a50aec;
+  font-weight: 700;
+}
 /* Slider */
 .slider-box {
   background: var(--Absolute-White, #00ffd056);
@@ -465,4 +600,16 @@
   .footer-box_list {
     grid-template-columns: repeat(1, max-content);
   }
+}
+
+
+.buttonOpen {
+  transition: all 0.5s ease-in;
+}
+
+.background {
+  background-image: url('../assets/homework.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
 }

@@ -1,11 +1,16 @@
 /*========== COURSES ==========*/
 /* section-1 course-info */
+.course {
+  display: flex;
+
+}
 .course-info {
   margin-bottom: 100px;
 }
 .course-info__box {
   display: flex;
   gap: 0 100px;
+  margin-top: 70px;
 }
 .course-info__box_text {
   width: 748px;

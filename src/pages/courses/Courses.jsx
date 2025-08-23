@@ -17,9 +17,11 @@ import front3 from "../../assets/front-3.png";
 import "./courses.css";
 import { frontList, graphicList, mobileList, uiList, webList } from "./index";
 import CourseCard from "./CourseCard";
+import { Navbar, Footer } from "../../components";
 function Courses() {
   return (
     <>
+      <Navbar />
       <section className="course-info">
         <div className="container">
           <div className="course-info__box">
@@ -97,6 +99,7 @@ function Courses() {
         author="By Michael Adams"
         object={frontList}
       />
+      <Footer />
     </>
   );
 }

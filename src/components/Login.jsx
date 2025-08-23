@@ -1,15 +1,17 @@
-import React, { useState } from "react";
+import { useState } from "react";
 // import comment from "../assets/comment.png";
-import Slider from "./Slider";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setUserInfo } from './userSlice';
+import { setUserInfo } from './Redux/userSlice';
+import { toast } from "react-toastify";
+import { RxEnter } from "react-icons/rx";
+import { FaApple } from "react-icons/fa";
+import { FaSquareFacebook } from "react-icons/fa6";
+import { FcGoogle } from "react-icons/fc";
 function Login() {
   // const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [checked, setChecked] = useState(false);
-  const [isAuthorized, setIsAuthorized] = useState(false);
   
   const dispatch = useDispatch();
   const history = useNavigate();
@@ -18,104 +20,117 @@ function Login() {
     e.preventDefault();
 
     const body = { email, password };
-    console.log(body);
     try {
-      const response = await fetch("http://localhost:5000/api/user/login", {
+      const response = await fetch("http://localhost:5000/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
       const data = await response.json();
+      
       dispatch(setUserInfo(data))
-      console.log(data.id);
 
-      const id = data.id;
-      if (data.email) {
-        // or data.userFound, depending on your API response
-        // history(`/user/${id}`, { state: { id: email } });
-        // setIsAuthorized(!isAuthorized);
+      if (data.role === "student") {
         history("/profile", { state: { id: email } });
-        console.log(isAuthorized);
-        
-      } else {
-        alert("User does not exist");
+      } else if (data.role === "admin") {
+        history("/admin", {state: {id: email}});
+      } else if (data.role === "teacher") {
+        history("/profile", {state: {id: email}});
+      }
+      else {
+        toast.error("User don't exist");
       }
     } catch (error) {
-      console.log(error);
+      toast.error("Server error please try again");
     }
   };
   
   return (
-    <>
-      <section className="login">
-        <div className="container">
-          <div className="sign-up_box">
-            <div className="container-small">
-              <div className="sign-up_box__info">
-                <h4 className="sign-up_box__info-title">
-                  Students Testimonials
-                </h4>
-                <p className="sign-up_box__info-text">
-                  At our institution, we believe that the best way to understand
-                  the impact of our educational programs is through the words of
-                  our students themselves. Here are some heartfelt testimonials
-                  from our students, sharing their experiences and thoughts on
-                  their educational journey with us.
-                </p>
-                <Slider />
-              </div>
-            </div>
-            <div className="sign-up_auth">
-              <div className="sign-up_auth__info">
-                <h2 className="sign-up_auth__title">Login</h2>
-                <p className="sign-up_auth__text">
-                  Welcome back! Please log in to access you account
-                </p>
-              </div>
-              <form className="sign-up_auth__list" onSubmit={onSubmitForm}>
-                <li className="sign-up_auth__item">
-                  <p className="sign-up_auth__item-title">Email</p>
-                  <input
-                    className="sign-up_auth__item-input"
-                    type="email"
-                    placeholder="Enter your Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </li>
-                <li className="sign-up_auth__item">
-                  <p className="sign-up_auth__item-title">Password</p>
-                  <input
-                    className="sign-up_auth__item-input"
-                    type="password"
-                    placeholder="Enter your Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                </li>
-                <li className="sign-up_auth__item">
-                  <label className="sign-up_auth__item-check">
-                    <input
-                      type="checkbox"
-                      className="sign-up_auth__item-check_input"
-                      checked={checked}
-                      onChange={(e) => setChecked(e.target.checked)}
-                    />
-                    Remember Me
-                  </label>
-                </li>
-                <button className="sign-up_auth__item-button" type="submit">
-                  Login
-                </button>
-              </form>
-              <p className="sign-up_auth__choose-account">
-                Already have an account? <a href="/sign-up">Sign Up</a>
-              </p>
-            </div>
+    <div className="flex items-center justify-center backgroundSky">
+      <div className="bg-gradient-to-b from-blue-300 to-[#fffc]  rounded-lg shadow-lg p-8 max-w-sm w-full border border-gray-300">
+        <div className="flex justify-center mb-4">
+          <div className="h-12 w-12 bg-white rounded-full flex items-center justify-center">
+            <RxEnter className="text-2xl text-black" />
           </div>
         </div>
-      </section>
-    </>
+        <h2 className="text-2xl font-semibold text-center mb-2">
+          Login in with email
+        </h2>
+        <p className="text-center text-gray-600 mb-6">
+          O'quv markazimizga xush kelibsiz, registratsiyadan o'ting va bilim
+          maskaniga yo'l oling
+        </p>
+
+        <form onSubmit={onSubmitForm}>
+          <div className="mb-4">
+            <label
+              for="email"
+              className="block mb-2 text-sm font-medium text-gray-700"
+            >
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              required
+              className="border rounded-lg w-full py-2 px-3 text-gray-700 focus:outline-none focus:ring focus:ring-blue-300"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-6">
+            <label
+              for="password"
+              className="block mb-2 text-sm font-medium text-gray-700"
+            >
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              required
+              className="border rounded-lg w-full py-2 px-3 text-gray-700 focus:outline-none focus:ring focus:ring-blue-300"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+
+          <div className="flex justify-between mb-4">
+            <a href="#" className="text-sm text-blue-600 hover:underline">
+              Forgot password?
+            </a>
+          </div>
+
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-500 transition"
+          >
+            Get Started
+          </button>
+        </form>
+
+        <div className="mt-6 flex items-center justify-between">
+          <hr className="w-full border-gray-300" />
+          <span className="mx-2 text-gray-600">or</span>
+          <hr className="w-full border-gray-300" />
+        </div>
+
+        <div className="flex justify-around mt-6">
+          <button className="bg-white text-black border rounded-lg py-2 px-4 gap-2 flex items-center">
+            <FcGoogle />
+          </button>
+          <button className="bg-white text-black border rounded-lg py-2 px-4 gap-2 flex items-center">
+            <FaSquareFacebook color="blue" />
+          </button>
+          <button className="bg-white border rounded-lg py-2 px-4 flex items-center">
+            <FaApple color="black" />
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 
