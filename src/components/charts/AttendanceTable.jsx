@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { FaUser , FaCheck, FaTimes, FaClock, FaMinusCircle } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { FaUser, FaClock, FaMinusCircle } from "react-icons/fa";
 import { IoMdCheckmarkCircleOutline, IoMdCloseCircle } from "react-icons/io";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -20,31 +20,39 @@ const AttendanceTable = ({ selectedTab }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const Groupresponse = await fetch("http://localhost:5000/api/group");
+        const Groupresponse = await fetch(
+          "https://sql-server-nb7m.onrender.com/api/group"
+        );
         const data = await Groupresponse.json();
-        
+
         // Get the lesson days from the selected tab
         const lessonDaysString = data
-          .filter(item => item.name === selectedTab)
-          .map(item => item.day)[0]; // Get the first matching day's string
+          .filter((item) => item.name === selectedTab)
+          .map((item) => item.day)[0]; // Get the first matching day's string
 
-        
         // Convert lesson days string to an array of day numbers
         const lessonDays = convertDaysStringToArray(lessonDaysString);
 
-        console.log(lessonDays, lessonDaysString);
-        const teacherName = data.filter((item) => item.role === "teacher" && `${item.id}` === `${userInfo.userInfo.id}`);
+        const teacherName = data.filter(
+          (item) =>
+            item.role === "teacher" &&
+            `${item.id}` === `${userInfo.userInfo.id}`
+        );
         const teacher = data.filter(
           (item) => item.role === "teacher" && `${item.classId}` === `${id}`
         );
         const students = data.filter((item) => {
-          return item.role === "student" && item.name === selectedTab && item.ketdi === null;
+          return (
+            item.role === "student" &&
+            item.name === selectedTab &&
+            item.ketdi === null
+          );
         });
         setTeacherName(teacherName);
         setStudents(students);
         setTeacher(teacher);
         const attendanceResponse = await fetch(
-          "http://localhost:5000/api/attendance"
+          "https://sql-server-nb7m.onrender.com/api/attendance"
         );
         const attendanceRecords = await attendanceResponse.json();
         setAttendanceData(attendanceRecords);
@@ -56,11 +64,12 @@ const AttendanceTable = ({ selectedTab }) => {
 
         const firstDay = new Date(currentYear, currentMonth, 1);
         const lastDay = new Date(currentYear, currentMonth + 1, 0);
-        
+
         // Generate future dates based on lessonDays
         for (let day = firstDay.getDate(); day <= lastDay.getDate(); day++) {
           const futureDate = new Date(currentYear, currentMonth, day);
-          if (lessonDays.includes(futureDate.getDay())) { // Check if the day is in lessonDays
+          if (lessonDays.includes(futureDate.getDay())) {
+            // Check if the day is in lessonDays
             futureDatesArray.push(futureDate.toLocaleDateString());
           }
         }
@@ -86,7 +95,10 @@ const AttendanceTable = ({ selectedTab }) => {
       Sun: 0,
     };
 
-    return daysString.split(", ").map(day => daysMap[day.trim()]).filter(day => day !== undefined);
+    return daysString
+      .split(", ")
+      .map((day) => daysMap[day.trim()])
+      .filter((day) => day !== undefined);
   };
 
   const handleIconClick = (studentId, date, status, classId) => {
@@ -109,18 +121,21 @@ const AttendanceTable = ({ selectedTab }) => {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/attendance", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          studentId: editingRecord.studentId,
-          date: editingRecord.date,
-          status: editingRecord.status,
-          classId: editingRecord.classId,
-        }),
-      });
+      const response = await fetch(
+        "https://sql-server-nb7m.onrender.com/api/attendance",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            studentId: editingRecord.studentId,
+            date: editingRecord.date,
+            status: editingRecord.status,
+            classId: editingRecord.classId,
+          }),
+        }
+      );
 
       if (response.ok) {
         setAttendanceData((prev) =>
@@ -157,28 +172,56 @@ const AttendanceTable = ({ selectedTab }) => {
           <IoMdCheckmarkCircleOutline
             data-tip="Present"
             className="text-green-500 cursor-pointer hover:text-green-700 text-[24px]"
-            onClick={() => handleIconClick(studentId, date, "present", id || teacherName.classId)}
+            onClick={() =>
+              handleIconClick(
+                studentId,
+                date,
+                "present",
+                id || teacherName.classId
+              )
+            }
           />
         );
       case "absent":
         return (
           <IoMdCloseCircle
             className="text-red-500 cursor-pointer hover:text-redDark text-[24px]"
-            onClick={() => handleIconClick(studentId, date, "absent", id || teacherName.classId)}
+            onClick={() =>
+              handleIconClick(
+                studentId,
+                date,
+                "absent",
+                id || teacherName.classId
+              )
+            }
           />
         );
       case "late":
         return (
           <FaClock
             className="text-yellow-500 cursor-pointer hover:text-yellow-700 text-[24px]"
-            onClick={() => handleIconClick(studentId, date, "late", id || teacherName.classId)}
+            onClick={() =>
+              handleIconClick(
+                studentId,
+                date,
+                "late",
+                id || teacherName.classId
+              )
+            }
           />
         );
       case "null":
         return (
           <FaMinusCircle
             className="text-gray-300 cursor-pointer hover:text-gray-500 text-[24px]"
-            onClick={() => handleIconClick(studentId, date, "absent", id || teacherName.classId)}
+            onClick={() =>
+              handleIconClick(
+                studentId,
+                date,
+                "absent",
+                id || teacherName.classId
+              )
+            }
           />
         );
     }
@@ -234,7 +277,7 @@ const AttendanceTable = ({ selectedTab }) => {
                       className="w-10 h-10 rounded-full object-cover"
                     />
                   ) : (
-                    <FaUser  className="w-10 h-10 rounded-full object-cover text-lamaSky" />
+                    <FaUser className="w-10 h-10 rounded-full object-cover text-lamaSky" />
                   )}
                   <div className="flex flex-col">
                     <h3 className="font-semibold">
@@ -323,7 +366,7 @@ const AttendanceTable = ({ selectedTab }) => {
           align-items: center;
           gap: 8px;
         }
-        
+
         .edit-button {
           padding: 2px 8px;
           background-color: #f0f0f0;
@@ -332,7 +375,7 @@ const AttendanceTable = ({ selectedTab }) => {
           cursor: pointer;
           font-size: 12px;
         }
-        
+
         .edit-button:hover {
           background-color: #e0e0e0;
         }

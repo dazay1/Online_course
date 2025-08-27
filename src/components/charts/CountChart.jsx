@@ -24,12 +24,13 @@ const CountChart = () => {
   useEffect(() => {
     const totalStudent = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/user");
+        const response = await fetch(
+          "https://sql-server-nb7m.onrender.com/api/user"
+        );
         const data = await response.json();
         // Calculate counts
 
-        const left = data.filter(item => item.ketdi !== null)
-        // console.log(left, data.length)
+        const left = data.filter((item) => item.ketdi !== null);
         const userCount = data.length - left.length;
         const totalCount = userCount;
         const boysCount = data.filter(

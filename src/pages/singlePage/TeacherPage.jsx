@@ -1,34 +1,35 @@
 import { useParams } from "react-router-dom";
 import { BigCalendar, Performance } from "../../components";
 import FormModal from "../../components/forms/FormModal";
-import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { FaPhoneAlt, FaUser } from "react-icons/fa";
 import AdminLayout from "../layout";
 import { IoMdMail } from "react-icons/io";
+import { toast } from "react-toastify";
 const TeachersPage = () => {
   const id = useParams();
   const [user, setUser] = useState("");
 
-  console.log(id)
   useEffect(() => {
     const getUsersById = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/user/:id`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(id),
-        });
+        const response = await fetch(
+          `https://sql-server-nb7m.onrender.com/api/user/:id`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(id),
+          }
+        );
         const data = await response.json();
         setUser(data);
       } catch (error) {
-        console.log(error);
+        toast.error("SErver error please try again", error);
       }
     };
     getUsersById();
   }, [id]);
 
-  console.log(user)
   return (
     <AdminLayout hidden={true}>
       <div className="w-full flex gap-6">

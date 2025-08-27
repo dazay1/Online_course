@@ -17,25 +17,11 @@ export default function CountFinance() {
 
   useEffect(() => {
     const fetchStudents = async () => {
-      const response = await fetch("http://localhost:5000/api/payment");
+      const response = await fetch(
+        "https://sql-server-nb7m.onrender.com/api/payment"
+      );
       const data = await response.json();
-      // console.log(data)
       setStudents(data);
-
-      const monthToNumber = {
-        January: "01",
-        February: "02",
-        March: "03",
-        April: "04",
-        May: "05",
-        June: "06",
-        July: "07",
-        August: "08",
-        September: "09",
-        October: "10",
-        November: "11",
-        December: "12",
-      };
 
       const getPaymentAmount = (monthName) => {
         if (monthName === "july") {
@@ -96,7 +82,6 @@ export default function CountFinance() {
         // Return 0 or another default value for other months
         return 0;
       };
-      // console.log(students.map((item) => item.aug));
 
       // Update the data state with the sum of payments for August only
       setData([

@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { FaUser } from "react-icons/fa";
 import AdminLayout from "../layout";
+import { toast } from "react-toastify";
 const TeachersPage = () => {
   const id = useParams();
   const [user, setUser] = useState("");
@@ -16,20 +17,22 @@ const TeachersPage = () => {
   useEffect(() => {
     const getUsersById = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/user/:id`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(id),
-        });
+        const response = await fetch(
+          `https://sql-server-nb7m.onrender.com/api/user/:id`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(id),
+          }
+        );
         const data = await response.json();
         setUser(data);
       } catch (error) {
-        console.log(error);
+        toast.error("Server error please try again");
       }
     };
     getUsersById();
   }, [id]);
-  console.log(user)
   return (
     <AdminLayout hidden={true}>
       <div className="flex-1 p-4 gap-4">

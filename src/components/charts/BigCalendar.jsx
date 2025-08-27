@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 
 const localizer = momentLocalizer(moment);
 
-function BigCalendar({firstName, lastName}) {
+function BigCalendar({ firstName, lastName }) {
   const { userInfo } = useSelector((state) => state.userLogin);
   const [lessonDate, setLessonDate] = useState([]);
   const [view, setView] = useState(Views.WEEK);
@@ -23,14 +23,15 @@ function BigCalendar({firstName, lastName}) {
   useEffect(() => {
     const fetchLessonsAndHomework = async () => {
       try {
-        const lessonResponse = await fetch("http://localhost:5000/api/lesson");
+        const lessonResponse = await fetch(
+          "https://sql-server-nb7m.onrender.com/api/lesson"
+        );
         const homeworkResponse = await fetch(
-          "http://localhost:5000/api/homework"
+          "https://sql-server-nb7m.onrender.com/api/homework"
         );
         const lessons = await lessonResponse.json();
         const homework = await homeworkResponse.json();
 
-        // console.log(lessons);
         // Filter lessons for the logged-in teacher
         if (userInfo.role === "teacher") {
           const teacherLessons = lessons.filter(
@@ -89,11 +90,10 @@ function BigCalendar({firstName, lastName}) {
                 const homeworkDate = new Date(hw.date); // Assuming hw.date is in ISO format
                 return (
                   homeworkDate.toISOString().split("T")[0] ===
-                    date.toISOString().split("T")[0] 
+                  date.toISOString().split("T")[0]
                 );
               });
-              setHomeworkData(homework)
-              
+              setHomeworkData(homework);
 
               const lessonDate = new Date(date);
               lessonDate.setDate(lessonDate.getDate() + 1); // Add one day
@@ -114,7 +114,6 @@ function BigCalendar({firstName, lastName}) {
         });
         setLessonDate(formattedLessons);
       } catch (error) {
-        console.log(error);
         toast.error("Server error please try again");
       }
     };
@@ -153,15 +152,18 @@ function BigCalendar({firstName, lastName}) {
   // Function to handle adding a new theme
   const handleAddTheme = async () => {
     if (selectedEvent) {
-      const request = await fetch("http://localhost:5000/api/homework/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          group: selectedEvent.group,
-          lessonDate: selectedEvent.lessonDate,
-          theme: newTheme,
-        }),
-      });
+      const request = await fetch(
+        "https://sql-server-nb7m.onrender.com/api/homework/create",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            group: selectedEvent.group,
+            lessonDate: selectedEvent.lessonDate,
+            theme: newTheme,
+          }),
+        }
+      );
       const result = await request.json();
       const updatedEvents = lessonDate.map((event) => {
         if (event.id === selectedEvent.id) {
@@ -172,20 +174,23 @@ function BigCalendar({firstName, lastName}) {
       setLessonDate(updatedEvents);
       setNewTheme(""); // Clear the input
       setSelectedEvent(null); // Close the popup
-      toast.success('Theme added successfully')
+      toast.success("Theme added successfully");
     }
   };
   const handleUpdate = async () => {
     if (selectedEvent) {
-      const request = await fetch("http://localhost:5000/api/homework/update", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          group: selectedEvent.group,
-          lessonDate: selectedEvent.lessonDate,
-          theme: newTheme,
-        }),
-      });
+      const request = await fetch(
+        "https://sql-server-nb7m.onrender.com/api/homework/update",
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            group: selectedEvent.group,
+            lessonDate: selectedEvent.lessonDate,
+            theme: newTheme,
+          }),
+        }
+      );
       const result = await request.json();
       const updatedEvents = lessonDate.map((event) => {
         if (event.id === selectedEvent.id) {
@@ -200,7 +205,9 @@ function BigCalendar({firstName, lastName}) {
       toast.success("Theme updated successfully");
     }
   };
-  const filteredHomework = homeworkData.filter((item) => selectedEvent ? item.date === selectedEvent.lessonDate : false);
+  const filteredHomework = homeworkData.filter((item) =>
+    selectedEvent ? item.date === selectedEvent.lessonDate : false
+  );
   const filter = filteredHomework ? filteredHomework[0] : null;
   return (
     <>
@@ -240,25 +247,22 @@ function BigCalendar({firstName, lastName}) {
             <b>Group:</b> {selectedEvent.group}
           </div>
           <div>
-
             <b>Topic of the lesson:</b>{" "}
             {isEditing === false ? (
               filter ? (
                 <div className="flex justify-between items-center">
                   <span>{filter.theme}</span>
-                  {userInfo.role === "student" ? (
-                    null
-                  ) : (
+                  {userInfo.role === "student" ? null : (
                     <button
-                    onClick={() => {
-                      setIsEditing(true);
-                      toast.success("Open the theme again to change value");
-                    }}
-                    style={{ marginLeft: "10px", cursor: "pointer" }}
-                    className=" bg-lamaSky rounded-lg p-2"
-                  >
-                    Edit
-                  </button>
+                      onClick={() => {
+                        setIsEditing(true);
+                        toast.success("Open the theme again to change value");
+                      }}
+                      style={{ marginLeft: "10px", cursor: "pointer" }}
+                      className=" bg-lamaSky rounded-lg p-2"
+                    >
+                      Edit
+                    </button>
                   )}
                 </div>
               ) : filter === undefined ? (
@@ -288,15 +292,26 @@ function BigCalendar({firstName, lastName}) {
                   style={{ width: "100%", marginTop: "5px" }}
                 />
                 <div>
-                <button onClick={() => setIsEditing(false)} style={{marginTop: "5px", cursor: "pointer", background: "lamaPurple"}}>
-                  Cancel
-                </button>
-                <button
-                  onClick={handleUpdate}
-                  style={{ marginTop: "5px", cursor: "pointer", background: "lamaYellow" }}
-                >
-                  Change
-                </button>
+                  <button
+                    onClick={() => setIsEditing(false)}
+                    style={{
+                      marginTop: "5px",
+                      cursor: "pointer",
+                      background: "lamaPurple",
+                    }}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleUpdate}
+                    style={{
+                      marginTop: "5px",
+                      cursor: "pointer",
+                      background: "lamaYellow",
+                    }}
+                  >
+                    Change
+                  </button>
                 </div>
               </>
             )}

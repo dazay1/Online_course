@@ -21,7 +21,9 @@ function AttendanceChart() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/attendance");
+        const response = await fetch(
+          "https://sql-server-nb7m.onrender.com/api/attendance"
+        );
         const attendanceRecords = await response.json();
 
         // Get today's date and calculate the start and end of the current week
@@ -84,7 +86,10 @@ function AttendanceChart() {
         // Process attendance records to fill the attendanceByMonth object
         attendanceRecords.forEach((record) => {
           const date = new Date(record.attendance_date);
-          if (date.getMonth() === currentMonth && date.getFullYear() === currentYear) {
+          if (
+            date.getMonth() === currentMonth &&
+            date.getFullYear() === currentYear
+          ) {
             const day = date.getDate() - 1; // Adjust for zero-based index
             if (record.status === "present") {
               attendanceByMonth[day].present += 1;
@@ -176,12 +181,7 @@ function AttendanceChart() {
         </div>
       </div>
       <ResponsiveContainer width="100%" height="90%">
-        <BarChart
-          width={500}
-          height={300}
-          data={getChartData()}
-          barSize={20}
-        >
+        <BarChart width={500} height={300} data={getChartData()} barSize={20}>
           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#ddd" />
           <XAxis
             dataKey="name"

@@ -41,7 +41,9 @@ function TeachersListPage() {
 
   useEffect(() => {
     const fetchTeachers = async () => {
-      const response = await fetch("http://localhost:5000/api/user/teacher");
+      const response = await fetch(
+        "https://sql-server-nb7m.onrender.com/api/user/teacher"
+      );
       const data = await response.json();
       setTeachers(data);
     };
@@ -125,7 +127,11 @@ function TeachersListPage() {
           </div>
         </div>
         {/* LIST */}
-        <Table columns={columns} renderRow={renderRow} data={filteredTeachers} />
+        <Table
+          columns={columns}
+          renderRow={renderRow}
+          data={filteredTeachers}
+        />
       </div>
     </AdminLayout>
   );

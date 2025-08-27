@@ -20,22 +20,22 @@ function SignUp() {
     };
 
     try {
-      const response = await fetch("http://localhost:5000/api/user", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(info),
-      });
+      const response = await fetch(
+        "https://sql-server-nb7m.onrender.com/api/user",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(info),
+        }
+      );
       const data = await response.json();
-      console.log(data);
       toast.success("User registered successfully");
       history("/login", { state: { id: email } });
-      
     } catch (error) {
-      console.error(error);
+      toast.error("Server error please try again");
     }
-    
   };
   return (
     <>

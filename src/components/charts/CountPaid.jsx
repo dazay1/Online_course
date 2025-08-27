@@ -20,12 +20,14 @@ const CountPaid = () => {
 
   useEffect(() => {
     const fetchStudents = async () => {
-      const response = await fetch("http://localhost:5000/api/payment");
+      const response = await fetch(
+        "https://sql-server-nb7m.onrender.com/api/payment"
+      );
       const data = await response.json();
       setStudents(data);
 
-      const june = students.filter(item => item.keldiAug === null);
-      const aug = students.filter(item => item.ketdiJuly === null);
+      const june = students.filter((item) => item.keldiAug === null);
+      const aug = students.filter((item) => item.ketdiJuly === null);
       const getPaymentDate = (monthName) => {
         if (monthName === "july") {
           const amounts = june
@@ -40,7 +42,6 @@ const CountPaid = () => {
             })
             .filter((amount) => !isNaN(amount) && amount !== 0); // Filter out NaN values
           // Sum the amounts
-          // console.log(amounts.filter(item => item === 0))
           return amounts;
         } else if (monthName === "aug") {
           const amounts = aug

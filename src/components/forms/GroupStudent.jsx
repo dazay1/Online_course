@@ -5,26 +5,22 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import InputField from "../InputField";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useEffect } from "react";
 const schema = z.object({
   groupName: z
     .string()
     .min(3, { message: "Username must be at least 2 characters long!" })
     .max(20, { message: "Username must be at most 20 characters long!" }),
-  startTime: z.string().min(1, {message: "Time is required"}),
-  endTime: z.string().min(1, {message: "Time is required"}),
+  startTime: z.string().min(1, { message: "Time is required" }),
+  endTime: z.string().min(1, { message: "Time is required" }),
   firstName: z.string().min(1, { message: "First name is required" }),
   lastName: z.string().min(1, { message: "Last name is required" }),
-  subjects: z.string().min(1, {message: 'Subject name is required'}),
-  lessonDate: z.string().min(1, {message: 'Days of the lesson should be added'}),
+  subjects: z.string().min(1, { message: "Subject name is required" }),
+  lessonDate: z
+    .string()
+    .min(1, { message: "Days of the lesson should be added" }),
 });
 const GroupStudent = ({ type, data, setOpen }) => {
-  const id = useParams();
-  const [teachers, setTeachers] = useState([]);
-  const [teacherData, setTeacherData] = useState([]);
-  const selectedTab = data;
   const [number, setNumber] = useState({
     groupName: "",
     firstName: "",
@@ -32,7 +28,7 @@ const GroupStudent = ({ type, data, setOpen }) => {
     subjects: "",
     startTime: "",
     endTime: "",
-    lessonDate: ""
+    lessonDate: "",
   });
   const {
     register,
@@ -41,7 +37,6 @@ const GroupStudent = ({ type, data, setOpen }) => {
   } = useForm({ resolver: zodResolver(schema) });
   const onSubmit = handleSubmit(
     async (data) => {
-      console.log(data);
       try {
         if (type === "create") {
           setNumber((prev) => ({
@@ -54,7 +49,7 @@ const GroupStudent = ({ type, data, setOpen }) => {
             lastName: data.lastName,
           }));
           const date = await fetch(
-            "http://localhost:5000/api/user/group/page",
+            "https://sql-server-nb7m.onrender.com/api/user/group/page",
             {
               method: "POST",
               headers: {
@@ -64,7 +59,6 @@ const GroupStudent = ({ type, data, setOpen }) => {
             }
           );
           const data = await date.json();
-          console.log(data)
           const correct = data.message === "Student registered successfully";
           const exists = data.message === "Student already exists"; // Adjust based on your API response
           if (correct) {
@@ -80,10 +74,8 @@ const GroupStudent = ({ type, data, setOpen }) => {
       } catch (error) {
         toast.error("An error occurred while processing your request.");
       }
-      setTeachers(data);
     },
     (errors) => {
-      console.log("Validation errors:", errors); // Debugging output
       toast.error("Validation error occured please try again");
     }
   );
@@ -97,9 +89,7 @@ const GroupStudent = ({ type, data, setOpen }) => {
         <InputField
           label="Group Name"
           name="groupName"
-          defaultValue={
-            type === "create" ? data?.name : data.name
-          }
+          defaultValue={type === "create" ? data?.name : data.name}
           register={register}
           error={errors?.groupName}
         />
@@ -107,9 +97,7 @@ const GroupStudent = ({ type, data, setOpen }) => {
           label="Start Time"
           name="startTime"
           type="startTime"
-          defaultValue={
-            type === "create" ? data?.startTime : data.startTime
-          }
+          defaultValue={type === "create" ? data?.startTime : data.startTime}
           register={register}
           error={errors?.startTime}
         />
@@ -125,18 +113,14 @@ const GroupStudent = ({ type, data, setOpen }) => {
           label="Lesson's Date"
           name="lessonDate"
           type="lessonDate"
-          defaultValue={
-            type === "create" ? data?.days : data.days  
-          }
+          defaultValue={type === "create" ? data?.days : data.days}
           register={register}
           error={errors?.lessonDate}
         />
         <InputField
           label="Subject"
           name="subjects"
-          defaultValue={
-            type === "create" ? data?.subjects : data.subjects
-          }
+          defaultValue={type === "create" ? data?.subjects : data.subjects}
           register={register}
           error={errors?.subjects}
         />

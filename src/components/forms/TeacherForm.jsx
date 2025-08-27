@@ -4,7 +4,6 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import InputField from "../InputField";
-import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import the CSS for toast notifications
@@ -30,31 +29,21 @@ const schema = z.object({
       })
     )
     .optional(), // Make subjects optional if neede
-  // img: z
-  //   .instanceof(File)
-  //   .optional()
-  //   .refine((file) => file instanceof File, {
-  //     message: "Invalid file",
-  //   }),
 });
 const TeacherForm = ({ type, data, setOpen }) => {
   const { id } = useParams();
-  const [teachers, setTeachers] = useState([]);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({ resolver: zodResolver(schema) });
 
-
   const onSubmit = handleSubmit(
     async (data) => {
-      console.log(teachers);
       try {
         if (type === "create") {
-          console.log(data);
           const response = await fetch(
-            "http://localhost:5000/api/user/teacher/page",
+            "https://sql-server-nb7m.onrender.com/api/user/teacher/page",
             {
               method: "POST",
               headers: {
@@ -64,7 +53,6 @@ const TeacherForm = ({ type, data, setOpen }) => {
             }
           );
           const request = await response.json();
-          console.log(request);
           const correct = request.message === "Teacher registered successfully";
           const exists = request.message === "Teacher already exists"; // Adjust based on your API response
           if (correct) {
@@ -76,15 +64,17 @@ const TeacherForm = ({ type, data, setOpen }) => {
           }
         } else if (type === "update") {
           // Handle the update logic here
-          const response = await fetch(`http://localhost:5000/api/user/${id}`, {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-          });
+          const response = await fetch(
+            `https://sql-server-nb7m.onrender.com/api/user/${id}`,
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(data),
+            }
+          );
           const result = await response.json();
-          console.log(result);
           const correct = result.message === "User updated successfully";
           if (correct) {
             setOpen(false); // Close the modal if the teacher is updated successfully
@@ -96,11 +86,9 @@ const TeacherForm = ({ type, data, setOpen }) => {
       } catch (error) {
         toast.error("An error occurred while processing your request."); // Notify on error
       }
-      setTeachers(data);
     },
     (errors) => {
-      console.log("Validation errors:", errors); // Debugging output
-      toast.error('Validation error occured please try again');
+      toast.error("Validation error occured please try again", errors);
     }
   );
   return (
@@ -194,26 +182,10 @@ const TeacherForm = ({ type, data, setOpen }) => {
             </p>
           )}
         </div>
-        {/* <div className="flex flex-col gap-2 w-full md:w-1/4 justify-center">
-          <label
-            className="text-xs text-gray-500 flex items-center gap-2 cursor-pointer"
-            htmlFor="img"
-          >
-            <IoCloudUploadOutline fontSize={24} />
-            <span>Upload a photo</span>
-          </label>
-          <input type="file" id="img" {...register("img")} className="hidden" />
-          {errors.img?.message && (
-            <p className="text-xs text-red-400">
-              {errors.img?.message.toString()}
-            </p>
-          )}
-        </div> */}
       </div>
       <button className="bg-blue-400 text-white p-2 rounded-md" type="submit">
         {type === "create" ? "Create" : "Update"}
       </button>
-
     </form>
   );
 };

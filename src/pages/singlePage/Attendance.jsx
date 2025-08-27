@@ -11,27 +11,20 @@ import AdminLayout from "../layout";
 const Attendance = () => {
   const { id } = useParams();
   const { userInfo } = useSelector((state) => state.userLogin);
-  const [group, setGroup] = useState([]);
   const [teacher, setTeacher] = useState([]);
   const [selectedTab, setSelectedTab] = useState(null);
   useEffect(() => {
     const fetchGroup = async () => {
-      const response = await fetch("http://localhost:5000/api/group");
+      const response = await fetch(
+        "https://sql-server-nb7m.onrender.com/api/group"
+      );
       // in the data I also have name of the students I jsut got name of the teacher to put in the website to make it easier
       const data = await response.json();
-      const userClasses = userInfo.classes || [];
-      // const teacher = data.filter(
-      //   (item) => item.role === "student" && item.class_name === currentClass
-      // );
       const teacher = data.filter(
         (item) => item.role === "teacher" && `${item.classId}` === `${id}`
       );
       // Filter students based on the selected tab (class)
-      const students = data.filter((item) => {
-        return item.role === "student" && item.name === selectedTab && item.ketdi === null;
-      });
       setTeacher(teacher);
-      setGroup(students);
     };
     fetchGroup();
   }, [id, userInfo.classes, selectedTab]);

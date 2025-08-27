@@ -54,7 +54,9 @@ const FinanceChart = () => {
   ]);
   useEffect(() => {
     const fetchStudents = async () => {
-      const response = await fetch("http://localhost:5000/api/user");
+      const response = await fetch(
+        "https://sql-server-nb7m.onrender.com/api/user"
+      );
       const data = await response.json();
       setStudents(data);
 
@@ -73,9 +75,11 @@ const FinanceChart = () => {
         December: "12",
       };
       const ketdi = students
-          .filter((item) => item.ketdi !== null)
-          .map((item) => item.ketdi);
-      const keldi = students.filter((item) => item.keldi !== null).map((item) => item.keldi);
+        .filter((item) => item.ketdi !== null)
+        .map((item) => item.ketdi);
+      const keldi = students
+        .filter((item) => item.keldi !== null)
+        .map((item) => item.keldi);
       const totalCount = ketdi.length + keldi.length;
       const getDatesByLeft = (monthName) => {
         const monthNumber = monthToNumber[monthName];
@@ -96,18 +100,22 @@ const FinanceChart = () => {
       // Example usage
       setData([
         {
-          name: 'Iyul',
-          ketdi: getDatesByLeft('June') ? getDatesByLeft('June').length : '',
-          keldi: getDatesByCome('June') ? getDatesByCome('June').length : '',
-          amt: totalCount
+          name: "Iyul",
+          ketdi: getDatesByLeft("June") ? getDatesByLeft("June").length : "",
+          keldi: getDatesByCome("June") ? getDatesByCome("June").length : "",
+          amt: totalCount,
         },
         {
-          name: 'Avg',
-          ketdi: getDatesByLeft('August') ? getDatesByLeft('August').length : '',
-          keldi: getDatesByCome('August') ? getDatesByCome('August').length : '',
-          amt: totalCount
-        }
-      ])
+          name: "Avg",
+          ketdi: getDatesByLeft("August")
+            ? getDatesByLeft("August").length
+            : "",
+          keldi: getDatesByCome("August")
+            ? getDatesByCome("August").length
+            : "",
+          amt: totalCount,
+        },
+      ]);
     };
     fetchStudents();
   }, [data]);

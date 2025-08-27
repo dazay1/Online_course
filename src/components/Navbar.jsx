@@ -11,7 +11,6 @@ function Navbar() {
   const showNavHandler = () => setShownNav(true);
   const hideNavHandler = () => setShownNav(false);
   const id = userInfo ? userInfo.id : undefined
-  console.log(id)
   return (
     <>
       {/* Nav */}

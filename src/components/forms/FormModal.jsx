@@ -9,7 +9,7 @@ import { clearUserInfo } from "../Redux/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { GroupForm, StudentForm, TeacherForm } from "../index";
 import GroupStudent from "./GroupStudent";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 const FormModal = ({ table, type, data, id, tab, firstName, lastName }) => {
   const forms = {
     teacher: (type, data) => (
@@ -42,41 +42,47 @@ const FormModal = ({ table, type, data, id, tab, firstName, lastName }) => {
     const email = userInfo.userInfo.email;
     const handleClear = async () => {
       if (table === "group") {
-        const response = await fetch("http://localhost:5000/api/user/group", {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(dataId),
-        });
+        const response = await fetch(
+          "https://sql-server-nb7m.onrender.com/api/user/group",
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(dataId),
+          }
+        );
         const data = await response.json();
-        console.log(dataId);
-        console.log(data);
       } else if (table === "profile") {
         dispatch(clearUserInfo());
         history("/", { state: { id: email } });
       } else if (table === "studentGroup") {
         const dataId = { tab, firstName, lastName };
-        console.log(dataId);
-        const response = await fetch("http://localhost:5000/api/user/student", {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(dataId),
-        });
+        const response = await fetch(
+          "https://sql-server-nb7m.onrender.com/api/user/student",
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(dataId),
+          }
+        );
 
         const data = await response.json();
         setOpen(false);
       } else {
         const dataId = { id };
-        const response = await fetch('http://localhost:5000/api/user/studentGroup', {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(dataId),
-        });
+        const response = await fetch(
+          "https://sql-server-nb7m.onrender.com/api/user/studentGroup",
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(dataId),
+          }
+        );
         const data = await response.json();
         setOpen(false);
       }

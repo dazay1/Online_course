@@ -45,7 +45,9 @@ function ClassPage() {
   const [open, setOpen] = useState(false);
   useEffect(() => {
     const fetchGroup = async () => {
-      const response = await fetch("http://localhost:5000/api/group");
+      const response = await fetch(
+        "https://sql-server-nb7m.onrender.com/api/group"
+      );
       // in the data I also have name of the students I jsut got name of the teacher to put in the website to make it easier
       const data = await response.json();
       const teachers = data.filter((item) => item.role === "teacher");
@@ -118,9 +120,7 @@ function ClassPage() {
                 Specifies: <span>{item.subjects}</span>
               </h4>
             </td>
-            <td className="hidden md:table-cell">
-              {item.className}
-            </td>
+            <td className="hidden md:table-cell">{item.className}</td>
             <td className="hidden md:table-cell"></td>
             <td className="hidden md:table-cell">
               {Array.isArray(item.days)

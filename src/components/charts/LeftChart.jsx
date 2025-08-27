@@ -24,16 +24,18 @@ const LeftChart = () => {
   useEffect(() => {
     const totalStudent = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/user");
+        const response = await fetch(
+          "https://sql-server-nb7m.onrender.com/api/user"
+        );
         const data = await response.json();
         // Calculate counts
 
-        const left = data.filter(item => item.ketdi !== null)
-        const come = data.filter(item => item.keldi !== null)
-        
+        const left = data.filter((item) => item.ketdi !== null);
+        const come = data.filter((item) => item.keldi !== null);
+
         const leftCount = left.length;
-        const comeCount = come.length; 
-    
+        const comeCount = come.length;
+
         const totalCount = leftCount + comeCount;
         const leftPercentage = (leftCount / totalCount) * 100;
         const comePercentage = (comeCount / totalCount) * 100;

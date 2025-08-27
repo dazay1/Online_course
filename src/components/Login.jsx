@@ -2,7 +2,7 @@ import { useState } from "react";
 // import comment from "../assets/comment.png";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setUserInfo } from './Redux/userSlice';
+import { setUserInfo } from "./Redux/userSlice";
 import { toast } from "react-toastify";
 import { RxEnter } from "react-icons/rx";
 import { FaApple } from "react-icons/fa";
@@ -12,7 +12,7 @@ function Login() {
   // const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  
+
   const dispatch = useDispatch();
   const history = useNavigate();
 
@@ -21,30 +21,32 @@ function Login() {
 
     const body = { email, password };
     try {
-      const response = await fetch("http://localhost:5000/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
+      const response = await fetch(
+        "https://sql-server-nb7m.onrender.com/api/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        }
+      );
       const data = await response.json();
-      
-      dispatch(setUserInfo(data))
+
+      dispatch(setUserInfo(data));
 
       if (data.role === "student") {
         history("/profile", { state: { id: email } });
       } else if (data.role === "admin") {
-        history("/admin", {state: {id: email}});
+        history("/admin", { state: { id: email } });
       } else if (data.role === "teacher") {
-        history("/profile", {state: {id: email}});
-      }
-      else {
+        history("/profile", { state: { id: email } });
+      } else {
         toast.error("User don't exist");
       }
     } catch (error) {
       toast.error("Server error please try again");
     }
   };
-  
+
   return (
     <div className="flex items-center justify-center backgroundSky">
       <div className="bg-gradient-to-b from-blue-300 to-[#fffc]  rounded-lg shadow-lg p-8 max-w-sm w-full border border-gray-300">

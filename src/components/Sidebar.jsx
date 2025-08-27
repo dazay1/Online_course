@@ -65,8 +65,9 @@ function Sidebar() {
           <IoArrowBack className="text-white text-[24px] mb-8 ml-[-15px] mt-[-10px]" />
         </NavLink>
         {userInfo.role === "admin"
-          ? admin.map((item) => (
+          ? admin.map((item, index) => (
               <NavLink
+                key={index}
                 to={item.url}
                 className={({ isActive }) =>
                   isActive ? "active sidebar-item__link" : "sidebar-item__link"

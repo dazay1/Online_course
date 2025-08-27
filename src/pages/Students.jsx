@@ -40,7 +40,9 @@ function StudentListPage() {
   const [edit, setEdit] = useState(false);
   useEffect(() => {
     const fetchStudents = async () => {
-      const response = await fetch("http://localhost:5000/api/user/student");
+      const response = await fetch(
+        "https://sql-server-nb7m.onrender.com/api/user/student"
+      );
       const data = await response.json();
       setStudents(data);
     };
@@ -62,13 +64,16 @@ function StudentListPage() {
       const formattedDate = `${day}.${month}.${year}`;
       const id = item.id;
       const dataId = { id, formattedDate };
-      const response = await fetch("http://localhost:5000/api/status/active", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(dataId),
-      });
+      const response = await fetch(
+        "https://sql-server-nb7m.onrender.com/api/status/active",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(dataId),
+        }
+      );
       const data = await response.json();
       if (response) {
         toast.success("Date updated successfully");
@@ -87,13 +92,16 @@ function StudentListPage() {
       const formattedDate = `${day}.${month}.${year}`;
       const id = item.id;
       const dataId = { id, formattedDate };
-      const response = await fetch("http://localhost:5000/api/status", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(dataId),
-      });
+      const response = await fetch(
+        "https://sql-server-nb7m.onrender.com/api/status",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(dataId),
+        }
+      );
       const data = await response.json();
       if (response) {
         toast.success("Date updated successfully");

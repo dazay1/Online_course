@@ -51,24 +51,53 @@ function DatePick({ payment, data, id, day, amount, paid }) {
       date.getDate() + 1
     );
     const formattedDate = localDate.toISOString().split("T")[0];
-    const columnName = formattedDate.split("-")[1] === '07' ? 'july' : formattedDate.split("-")[1] === '08' ? 'aug' : formattedDate.split("-")[1] === '09' ? 'sep' : formattedDate.split("-")[1] === '10' ? 'oct' : formattedDate.split("-")[1] === '11' ? 'nov' : formattedDate.split("-")[1] === '12' ? 'decem' : '';
-    const wayPaid = formattedDate.split("-")[1] === '07' ? 'wayJuly' : formattedDate.split("-")[1] === '08' ? 'wayAug' : formattedDate.split("-")[1] === '09' ? 'waySep' : formattedDate.split("-")[1] === '10' ? 'wayOct' : formattedDate.split("-")[1] === '11' ? 'wayNov' : formattedDate.split("-")[1] === '12' ? 'wayDec' : '';
+    const columnName =
+      formattedDate.split("-")[1] === "07"
+        ? "july"
+        : formattedDate.split("-")[1] === "08"
+        ? "aug"
+        : formattedDate.split("-")[1] === "09"
+        ? "sep"
+        : formattedDate.split("-")[1] === "10"
+        ? "oct"
+        : formattedDate.split("-")[1] === "11"
+        ? "nov"
+        : formattedDate.split("-")[1] === "12"
+        ? "decem"
+        : "";
+    const wayPaid =
+      formattedDate.split("-")[1] === "07"
+        ? "wayJuly"
+        : formattedDate.split("-")[1] === "08"
+        ? "wayAug"
+        : formattedDate.split("-")[1] === "09"
+        ? "waySep"
+        : formattedDate.split("-")[1] === "10"
+        ? "wayOct"
+        : formattedDate.split("-")[1] === "11"
+        ? "wayNov"
+        : formattedDate.split("-")[1] === "12"
+        ? "wayDec"
+        : "";
     try {
-      const request = await fetch(`http://localhost:5000/api/date`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          day: formattedDate,
-          id: id,
-          status: status.status,
-          amountPaid: amountPaid,
-          columnName: columnName,
-          way: wayPaid,
-          wayPaid: way, // Include amount only if paid
-        }),
-      });
+      const request = await fetch(
+        `https://sql-server-nb7m.onrender.com/api/date`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            day: formattedDate,
+            id: id,
+            status: status.status,
+            amountPaid: amountPaid,
+            columnName: columnName,
+            way: wayPaid,
+            wayPaid: way, // Include amount only if paid
+          }),
+        }
+      );
       if (request.ok) {
         toast.success("Date updated successfully");
       } else {
@@ -97,7 +126,9 @@ function DatePick({ payment, data, id, day, amount, paid }) {
         </select>
         {hoveredPhone === id && (
           <div className="absolute bg-white p-2 z-10">
-            <p className="text-black">Oylik to'lovi: {amount || "yozilmagan"}</p>
+            <p className="text-black">
+              Oylik to'lovi: {amount || "yozilmagan"}
+            </p>
             <p className="text-black">To'lov turi: {paid || "yozilmagan"}</p>
           </div>
         )}
@@ -109,7 +140,7 @@ function DatePick({ payment, data, id, day, amount, paid }) {
           dateFormat="yyyy-MM-dd"
           placeholderText="Select a date"
           className="mr-2 max-w-24"
-          />
+        />
       </td>
       {status &&
         status.status === "paid" && ( // Conditionally render the input
