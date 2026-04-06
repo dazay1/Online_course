@@ -1,112 +1,110 @@
 "use client";
 import { RadialBarChart, RadialBar, ResponsiveContainer } from "recharts";
 import maleFemale from "../../assets/maleFemale.png";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
+
+// In-memory cache for API data
+let cachedData = null;
 
 const CountChart = () => {
-  const [data, setData] = useState([
-    {
-      name: "Total",
-      count: 0,
-      fill: "white",
-    },
-    {
-      name: "Girls",
-      count: 0,
-      fill: "#fae27c",
-    },
-    {
-      name: "Boys",
-      count: 0,
-      fill: "#c3ebfa",
-    },
-  ]);
-  useEffect(() => {
-    const totalStudent = async () => {
-      try {
-        const response = await fetch(
-          "https://sql-server-nb7m.onrender.com/api/user"
-        );
-        const data = await response.json();
-        // Calculate counts
+  const [students, setStudents] = useState([]);
+  const [status, setStatus] = useState({ isLoading: false, error: null });
 
-        const left = data.filter((item) => item.ketdi !== null);
-        const userCount = data.length - left.length;
-        const totalCount = userCount;
-        const boysCount = data.filter(
-          (student) => student.sex === "male" && student.ketdi === null
-        ).length; // Assuming gender is a property
-        const boysPercentage = (boysCount / totalCount) * 100;
-        const boysRountedPercentage = boysPercentage.toFixed(0);
-        const girlsCount = totalCount - boysCount; // Calculate girls count
-        const girlsPercentage = (girlsCount / totalCount) * 100;
-        const girslRountedPercentage = girlsPercentage.toFixed(0);
-        // Update the data state
-        setData([
-          {
-            name: "Total",
-            count: totalCount,
-            fill: "white",
-          },
-          {
-            name: "Girls",
-            count: girlsCount,
-            percent: girslRountedPercentage,
-            fill: "#fae27c",
-          },
-          {
-            name: "Boys",
-            count: boysCount,
-            percent: boysRountedPercentage,
-            fill: "#c3ebfa",
-          },
-        ]);
+  // Fetch data once on mount
+  useEffect(() => {
+    const fetchStudents = async () => {
+      if (cachedData) {
+        setStudents(cachedData);
+        setStatus({ isLoading: false, error: null });
+        return;
+      }
+
+      setStatus({ isLoading: true, error: null });
+      try {
+        const response = await fetch("https://sql-server-nb7m.onrender.com/api/user", {
+          headers: { "Cache-Control": "no-cache" }, // Avoid browser cache issues
+        });
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+        const data = await response.json();
+        cachedData = data; // Cache the data
+        setStudents(data);
+        setStatus({ isLoading: false, error: null });
       } catch (error) {
         console.error("Error fetching student data:", error);
+        setStatus({ isLoading: false, error: "Failed to load student data." });
       }
     };
-    totalStudent();
-  }, [data]);
+    fetchStudents();
+  }, []);
+
+  // Memoize chart data to prevent recalculation
+  const chartData = useMemo(() => {
+    if (students.length === 0) {
+      return [
+        { name: "Total", count: 0, fill: "white" },
+        { name: "Girls", count: 0, percent: 0, fill: "#fae27c" },
+        { name: "Boys", count: 0, percent: 0, fill: "#c3ebfa" },
+      ];
+    }
+
+    const activeStudents = students.filter((item) => item.ketdi === null);
+    const totalCount = activeStudents.length;
+    const boysCount = activeStudents.filter((student) => student.sex === "male").length;
+    const girlsCount = totalCount - boysCount;
+    const boysPercentage = totalCount > 0 ? Math.round((boysCount / totalCount) * 100) : 0;
+    const girlsPercentage = totalCount > 0 ? Math.round((girlsCount / totalCount) * 100) : 0;
+
+    return [
+      { name: "Total", count: totalCount, fill: "white" },
+      { name: "Girls", count: girlsCount, percent: girlsPercentage, fill: "#fae27c" },
+      { name: "Boys", count: boysCount, percent: boysPercentage, fill: "#c3ebfa" },
+    ];
+  }, [students]);
+
   return (
     <div className="bg-white rounded-xl w-full h-full p-4">
-      {/* TITLE */}
       <h1 className="text-lg font-bold text-black">Students</h1>
-      {/* CHART */}
-      <div className="relative w-full h-[75%]">
-        <ResponsiveContainer>
-          <RadialBarChart
-            cx="50%"
-            cy="50%"
-            innerRadius="40%"
-            outerRadius="100%"
-            barSize={32}
-            data={data}
-          >
-            <RadialBar background dataKey="count" />
-          </RadialBarChart>
-        </ResponsiveContainer>
-        <img
-          src={maleFemale}
-          alt=""
-          width={40}
-          height={40}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 "
-        />{" "}
-      </div>
-      {/* BOTTOM */}
-      <div className="flex justify-center gap-16">
-        <div className="flex flex-col gap-1">
-          <div className="w-5 h-5 bg-lamaSky rounded-full" />
-          <h4 className="font-bold text-black">{data[2].count}</h4>
-          <h5 className="text-xs text-gray-300">Boys ({data[2].percent}%)</h5>
-        </div>
-        <div className="flex flex-col gap-1">
-          <div className="w-5 h-5 bg-lamaYellow rounded-full" />
-          <h4 className="font-bold text-black">{data[1].count}</h4>
-          <h5 className="text-xs text-gray-300">Girls ({data[1].percent}%)</h5>
-        </div>
-      </div>
+      {status.isLoading && <p className="text-gray-500 text-center">Loading...</p>}
+      {status.error && <p className="text-red-500 text-center">{status.error}</p>}
+      {!status.isLoading && !status.error && (
+        <>
+          <div className="relative w-full h-[75%]">
+            <ResponsiveContainer>
+              <RadialBarChart
+                cx="50%"
+                cy="50%"
+                innerRadius="40%"
+                outerRadius="100%"
+                barSize={32}
+                data={chartData}
+              >
+                <RadialBar background dataKey="count" />
+              </RadialBarChart>
+            </ResponsiveContainer>
+            <img
+              src={maleFemale}
+              alt="Male/Female Icon"
+              width={40}
+              height={40}
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+            />
+          </div>
+          <div className="flex justify-center gap-16">
+            <div className="flex flex-col gap-1 items-center">
+              <div className="w-5 h-5 bg-[#c3ebfa] rounded-full" />
+              <h4 className="font-bold text-black">{chartData[2].count}</h4>
+              <h5 className="text-xs text-gray-300">Boys ({chartData[2].percent}%)</h5>
+            </div>
+            <div className="flex flex-col gap-1 items-center">
+              <div className="w-5 h-5 bg-[#fae27c] rounded-full" />
+              <h4 className="font-bold text-black">{chartData[1].count}</h4>
+              <h5 className="text-xs text-gray-300">Girls ({chartData[1].percent}%)</h5>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };
+
 export default CountChart;

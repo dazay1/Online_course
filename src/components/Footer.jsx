@@ -22,7 +22,7 @@ const Footer = () => {
             <div className="flex items-center gap-2">
               <FaPhoneAlt color="white" />
               <p className="text-[18px] hover:decoration-1 text-white">
-                33-880-03-99
+                33-888-03-88
               </p>
             </div>
             {/* social link */}

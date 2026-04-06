@@ -112,7 +112,7 @@ function DatePick({ payment, data, id, day, amount, paid }) {
   return (
     <>
       <td
-        className="hidden md:table-cell"
+        className=""
         onMouseEnter={() => setHoveredPhone(id)}
         onMouseLeave={() => setHoveredPhone(null)}
       >
@@ -133,7 +133,7 @@ function DatePick({ payment, data, id, day, amount, paid }) {
           </div>
         )}
       </td>
-      <td className="hidden md:table-cell">
+      <td className="">
         <DatePicker
           selected={selectedDay} // Use selected prop to control the date
           onChange={handleDateChange}
@@ -144,7 +144,7 @@ function DatePick({ payment, data, id, day, amount, paid }) {
       </td>
       {status &&
         status.status === "paid" && ( // Conditionally render the input
-          <td className="hidden md:table-cell">
+          <td className="">
             <div className="tooltip mb-2">
               <input
                 type="number"

@@ -10,29 +10,11 @@ import "react-datepicker/dist/react-datepicker.css"; // Import the CSS for DateP
 import DatePick from "../components/forms/DatePicker";
 
 const columns = [
-  {
-    header: "Info",
-    accessor: "info",
-  },
-  {
-    header: "Status",
-    accessor: "Status",
-    className: "hidden md:table-cell",
-  },
-  {
-    header: "Payment",
-    accessor: "payment",
-    className: "hidden md:table-cell",
-  },
-  {
-    header: "Phone",
-    accessor: "Phone",
-    className: "hidden lg:table-cell",
-  },
-  {
-    header: "Actions",
-    accessor: "actions",
-  },
+  { header: "Info", accessor: "info" },
+  { header: "Status", accessor: "status" },
+  { header: "Payment", accessor: "payment" },
+  { header: "Phone", accessor: "phone" },
+  { header: "Actions", accessor: "actions" },
 ];
 
 function StudentListPage() {
@@ -41,10 +23,10 @@ function StudentListPage() {
   const [students, setStudents] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [hoveredPhone, setHoveredPhone] = useState(null);
-  const [edit, setEdit] = useState(false);
-  const [selectedMonth, setSelectedMonth] = useState("june"); // Default month
+  const [editRowId, setEditRowId] = useState(null); // Track which row is in edit mode
+  const [selectedMonth, setSelectedMonth] = useState("july"); // Default month
   const [paymentStatus, setPaymentStatus] = useState("all"); // Default payment status
-  const [amount, setAmount] = useState([]);
+
   useEffect(() => {
     const fetchStudents = async () => {
       const response = await fetch(
@@ -57,49 +39,47 @@ function StudentListPage() {
   }, []);
 
   const isPaid = (student) => {
-    // const left = student.ketdiJuly ? student.ketdiJuly.split(".")[1] : '';
-    // const come = student.keldiAug ? student.kelAug.split(".")[1] : '';
     if (paymentStatus === "paid") {
       if (selectedMonth === "july") {
         return (
           student.july !== null && student.july > 0 && student.keldiAug === null
-        ); // Check if payment exists for July
+        );
       } else if (selectedMonth === "aug") {
-        return student.aug !== null && student.aug > 0; // Check if payment exists for August
+        return student.aug !== null && student.aug > 0;
       } else if (selectedMonth === "sep") {
-        return student.sep !== null && student.sep > 0; // Check if payment exists for September
+        return student.sep !== null && student.sep > 0;
       }
     } else if (paymentStatus === "notPaid") {
       if (selectedMonth === "july") {
-        return student.july === null || student.july === 0; // Check if payment is not made for July
+        return student.july === null || student.july === 0;
       } else if (selectedMonth === "aug") {
-        return student.aug === null || student.aug === 0; // Check if payment is not made for August
+        return student.aug === null || student.aug === 0;
       } else if (selectedMonth === "sep") {
-        return student.sep === null || student.sep === 0; // Check if payment is not made for September
+        return student.sep === null || student.sep === 0;
       }
     }
-    return false; // Default case if no conditions are met
+    return paymentStatus === "all"; // Show all if 'all' selected
   };
+
   const filteredStudents = students.filter((student) => {
     const fullName = `${student.firstName} ${student.lastName}`.toLowerCase();
     return fullName.includes(searchQuery.toLowerCase()) && isPaid(student);
   });
 
-  // return fullName.includes(searchQuery.toLowerCase())
   const handleActiveChange = async (item, date) => {
-    // ... (existing code for handling date change)
+    // Your existing code for handling date change here
   };
 
   const handleDateChange = async (item, date) => {
-    // ... (existing code for handling date change)
+    // Your existing code for handling date change here
   };
 
   const renderRow = (item) => (
     <tr
       key={item.id}
-      className={`border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight`}
+      className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight relative"
     >
-      <td className="flex items-center gap-4 p-4">
+      <td className="flex items-center gap-4 p-4 min-w-[220px]">
         {item.img ? (
           <img
             src={item.img}
@@ -109,7 +89,7 @@ function StudentListPage() {
             className="w-10 h-10 rounded-full object-cover"
           />
         ) : (
-          <FaUser className="w-10 h-10 rounded-full object-cover text-lamaSky" />
+          <FaUser className="w-12 h-12 rounded-full bg-sky-100 p-2 text-sky-600" />
         )}
         <div className="flex flex-col">
           <h3
@@ -123,69 +103,72 @@ function StudentListPage() {
           </p>
         </div>
       </td>
-      <td className="hidden md:table-cell">
+      <td className="min-w-[180px]">
         {item.ketdiJuly ? (
           <div className="flex items-center">
             <span>{item.ketdiJuly}</span>
             <button
-              onClick={() => setEdit(true)}
+              onClick={() => setEditRowId(item.id)}
               className="ml-2 text-blue-500"
             >
-              <span style={{ display: edit ? "none" : "block" }}>
-                Set Active
-              </span>
-              {edit && (
+              {editRowId === item.id ? (
                 <DatePicker
-                  selected={null} // No date selected initially
-                  onChange={(date) => handleActiveChange(item, date)} // Handle date change
+                  selected={null}
+                  onChange={(date) => handleActiveChange(item, date)}
                   dateFormat="yyyy-MM-dd"
                   placeholderText="Select a Date"
-                  className="mr-2 max-w-24"
+                  className="mr-2 max-w-[120px]"
+                  onClick={(e) => e.stopPropagation()}
+                  autoFocus
                 />
+              ) : (
+                "Set Active"
               )}
             </button>
           </div>
         ) : (
-          <div className="flex items-center gap-[-30px]">
+          <div className="flex items-center gap-2">
             <DatePicker
-              selected={null} // No date selected initially
-              onChange={(date) => handleDateChange(item, date)} // Handle date change
+              selected={null}
+              onChange={(date) => handleDateChange(item, date)}
               dateFormat="yyyy-MM-dd"
               placeholderText="Active"
-              className="mr-2 max-w-18"
+              className="mr-2 max-w-[120px]"
             />
-            <p>{item.keldiAug ? item.keldiAug : ""}</p>
+            <p>{item.keldiAug || ""}</p>
           </div>
         )}
       </td>
-      <DatePick
-        payment={item.payment}
-        data={item}
-        id={item.payment_id}
-        day={item.weekDay}
-        amount={
-          selectedMonth === "july"
-            ? item.july
-            : selectedMonth === "aug"
-            ? item.aug
-            : item.sep
-        }
-        paid={
-          selectedMonth === "july"
-            ? item.wayJuly
-            : selectedMonth === "aug"
-            ? item.wayAug
-            : item.waySep
-        }
-      />
+      <td className="min-w-[150px]">
+        <DatePick
+          payment={item.payment}
+          data={item}
+          id={item.payment_id}
+          day={item.weekDay}
+          amount={
+            selectedMonth === "july"
+              ? item.july
+              : selectedMonth === "aug"
+              ? item.aug
+              : item.sep
+          }
+          paid={
+            selectedMonth === "july"
+              ? item.wayJuly
+              : selectedMonth === "aug"
+              ? item.wayAug
+              : item.waySep
+          }
+        />
+      </td>
       <td
-        className="hidden md:table-cell text-sm"
+        className="min-w-[140px] text-sm relative"
         onMouseEnter={() => setHoveredPhone(item.payment_id)}
         onMouseLeave={() => setHoveredPhone(null)}
       >
         {item.phone || "Should be added"}
         {hoveredPhone === item.payment_id && (
-          <div className="absolute bg-white p-2 z-10">
+          <div className="absolute top-full left-0 mt-1 bg-white p-2 rounded shadow-lg z-50 w-48">
             <p className="text-black">
               Adasi: {item.fatherPhone || "yozilmagan"}
             </p>
@@ -195,7 +178,7 @@ function StudentListPage() {
           </div>
         )}
       </td>
-      <td>
+      <td className="min-w-[100px]">
         <div className="flex items-center gap-2">
           <a href={`/students/${item.id}`}>
             <button className="w-7 h-7 flex items-center justify-center rounded-full bg-lamaSky">
@@ -212,50 +195,49 @@ function StudentListPage() {
 
   return (
     <AdminLayout>
-      <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
+      <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0 width">
         {/* TOP */}
-        <div className="flex items-center justify-between">
-          <h1 className="hidden md:block text-lg font-semibold">
-            All Students
-          </h1>
-          <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
-            <div className="flex items-center gap-4 self-end">
+        <div className="flex items-center justify-between flex-col md:flex-row">
+          <h1 className="text-lg font-semibold mb-4">All Students</h1>
+          <div className="flex flex-col md:flex-row items-center gap-4">
+            <div className="flex items-center gap-4 md:self-end justify-between">
               <input
-                className="bg-transparent border border-gray-300 rounded-md focus:outline-none p-1 focus:border-gray-500"
+                className="bg-transparent border w-full border-gray-300 rounded-md focus:outline-none p-1 focus:border-gray-500"
                 placeholder="Search..."
                 type="text"
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)} // Update search query on input change
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
               <select
                 value={selectedMonth}
                 onChange={(e) => setSelectedMonth(e.target.value)}
-                className="border border-gray-300 rounded-md p-1"
+                className="border md:w-full w-16 border-gray-300 rounded-md p-1"
               >
                 <option value="july">July</option>
                 <option value="aug">August</option>
                 <option value="sep">September</option>
-                {/* Add more months as needed */}
               </select>
               <select
                 value={paymentStatus}
                 onChange={(e) => setPaymentStatus(e.target.value)}
-                className="border border-gray-300 rounded-md p-1"
+                className="border border-gray-300 w-28 rounded-md p-1"
               >
                 <option value="all">All</option>
-                <option value="paid">Paid</option>
-                <option value="notPaid">Not Paid</option>
+                <option value="paid">To'langan</option>
+                <option value="notPaid">To'lanmagan</option>
               </select>
             </div>
           </div>
         </div>
         {/* LIST */}
-        <Table
-          columns={columns}
-          renderRow={renderRow}
-          data={filteredStudents}
-        />{" "}
-        {/* Use filtered students */}
+        <div className="overflow-x-auto mt-4">
+          <Table
+            columns={columns}
+            renderRow={renderRow}
+            data={filteredStudents}
+            className="min-w-full"
+          />
+        </div>
       </div>
     </AdminLayout>
   );

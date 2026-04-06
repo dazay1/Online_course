@@ -91,7 +91,7 @@ const TeachersPage = () => {
       </div>
       <div className="mt-4 bg-white rounded-md  p-4 h-[800px]">
         <h4>Teacher&apos;s Schedule</h4>
-        <BigCalendar firstName={user.firstName} lastName={user.lastName} />
+        <BigCalendar firstName={user.firstName} lastName={user.lastName} group={user.className} />
       </div>
     </AdminLayout>
   );

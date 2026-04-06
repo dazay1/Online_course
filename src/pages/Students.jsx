@@ -1,243 +1,244 @@
-import { MdRemoveRedEye } from "react-icons/md";
+"use client";
+
+import { useEffect, useState, useMemo, useCallback } from "react";
+import { useSelector } from "react-redux";
+import { MdRemoveRedEye, MdPhone, MdCalendarToday } from "react-icons/md";
+import { FaUser, FaInfoCircle } from "react-icons/fa";
+import { CgPlayListSearch } from "react-icons/cg";
+import DatePicker from "react-datepicker";
+import { toast } from "react-toastify";
 import FormModal from "../components/forms/FormModal";
 import { Table } from "../components";
-import { FaUser } from "react-icons/fa";
-import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
 import AdminLayout from "./layout";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css"; // Import the CSS for DatePicker
-import DatePick from "../components/forms/DatePicker";
-import { toast } from "react-toastify";
+import "react-datepicker/dist/react-datepicker.css";
 
-const columns = [
-  {
-    header: "Info",
-    accessor: "info",
-  },
-  {
-    header: "Status",
-    accessor: "Status",
-    className: "hidden md:table-cell",
-  },
-  {
-    header: "Phone",
-    accessor: "Phone",
-    className: "hidden lg:table-cell",
-  },
-  {
-    header: "Actions",
-    accessor: "actions",
-  },
+// In-memory cache
+let cachedData = null;
+
+const COLUMNS = [
+  { header: "Student Details", accessor: "info" },
+  { header: "Academic Status", accessor: "status", className: "hidden md:table-cell" },
+  { header: "Contact Details", accessor: "phone" },
+  { header: "Actions", accessor: "actions", className: "text-right" },
 ];
 
-function StudentListPage() {
+const StudentListPage = () => {
   const { userInfo } = useSelector((state) => state.userLogin);
   const role = userInfo?.role;
+
   const [students, setStudents] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [hoveredPhone, setHoveredPhone] = useState(null); // State for hovered phone
-  const [edit, setEdit] = useState(false);
+  const [hoveredPhone, setHoveredPhone] = useState(null);
+  const [editRowId, setEditRowId] = useState(null);
+  const [status, setStatus] = useState({ isLoading: false, error: null });
+
   useEffect(() => {
     const fetchStudents = async () => {
-      const response = await fetch(
-        "https://sql-server-nb7m.onrender.com/api/user/student"
-      );
-      const data = await response.json();
-      setStudents(data);
+      if (cachedData) {
+        setStudents(cachedData);
+        return;
+      }
+      setStatus({ isLoading: true, error: null });
+      try {
+        const response = await fetch("https://sql-server-nb7m.onrender.com/api/user/student");
+        if (!response.ok) throw new Error("Fetch failed");
+        const data = await response.json();
+        cachedData = data;
+        setStudents(data);
+        setStatus({ isLoading: false, error: null });
+      } catch (error) {
+        setStatus({ isLoading: false, error: "Failed to load data." });
+        toast.error("Failed to load student data.");
+      }
     };
     fetchStudents();
   }, []);
 
-  // Filter students based on the search query
-  const filteredStudents = students.filter((student) => {
-    const fullName = `${student.firstName} ${student.lastName}`.toLowerCase();
-    return fullName.includes(searchQuery.toLowerCase());
-  });
+  const filteredStudents = useMemo(() => {
+    const query = searchQuery.toLowerCase().trim();
+    if (!query) return students;
+    return students.filter((s) => 
+      `${s.firstName} ${s.lastName}`.toLowerCase().includes(query)
+    );
+  }, [students, searchQuery]);
 
-  const handleActiveChange = async (item, date) => {
-    if (date) {
-      const day = date.getDate(); // Get the day
-      const month = String(date.getMonth() + 1).padStart(2, "0"); // Get the month (0-indexed, so add 1) and pad with leading zero
-      const year = date.getFullYear(); // Get the year
-      // Format the date to 'DD.MM.YYYY'
-      const formattedDate = `${day}.${month}.${year}`;
-      const id = item.id;
-      const dataId = { id, formattedDate };
-      const response = await fetch(
-        "https://sql-server-nb7m.onrender.com/api/status/active",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(dataId),
-        }
-      );
-      const data = await response.json();
-      if (response) {
-        toast.success("Date updated successfully");
-      } else {
-        toast.error("Date failed to update");
-      }
+  const updateStatusDate = useCallback(async (id, date, endpoint, field) => {
+    if (!date) return;
+    const formattedDate = date.toLocaleDateString('ru-RU'); // DD.MM.YYYY
+    try {
+      const response = await fetch(`https://sql-server-nb7m.onrender.com/api/${endpoint}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, formattedDate }),
+      });
+      if (!response.ok) throw new Error("Update failed");
+      
+      toast.success("Status updated");
+      setStudents(prev => prev.map(s => 
+        s.id === id ? { ...s, [field]: formattedDate, ...(field === 'keldi' ? { ketdi: null } : {}) } : s
+      ));
+      setEditRowId(null);
+    } catch (err) {
+      toast.error("Update failed");
     }
-  };
+  }, []);
 
-  const handleDateChange = async (item, date) => {
-    if (date) {
-      const day = date.getDate(); // Get the day
-      const month = String(date.getMonth() + 1).padStart(2, "0"); // Get the month (0-indexed, so add 1) and pad with leading zero
-      const year = date.getFullYear(); // Get the year
-      // Format the date to 'DD.MM.YYYY'
-      const formattedDate = `${day}.${month}.${year}`;
-      const id = item.id;
-      const dataId = { id, formattedDate };
-      const response = await fetch(
-        "https://sql-server-nb7m.onrender.com/api/status",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(dataId),
-        }
-      );
-      const data = await response.json();
-      if (response) {
-        toast.success("Date updated successfully");
-      } else {
-        toast.error("Date failed to update");
-      }
-    }
-  };
+  const renderRow = useCallback((item) => {
+    const isInactive = !!item.ketdi;
+    const isActive = !!item.keldi;
 
-  const renderRow = (item) => (
-    <tr
-      key={item.id}
-      className={`border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight`}
-    >
-      <td className="flex items-center gap-4 p-4">
-        {item.img ? (
-          <img
-            src={item.img}
-            alt=""
-            width={40}
-            height={40}
-            className="w-10 h-10 rounded-full object-cover"
-          />
-        ) : (
-          <FaUser className="w-10 h-10 rounded-full object-cover text-lamaSky" />
-        )}
-        <div className="flex flex-col">
-          <h3
-            className="font-semibold"
-            style={{ color: item.keldi ? "green" : item.ketdi ? "red" : "" }}
-          >
-            {item.firstName} {item.lastName}
-          </h3>
-          <p className="text-xs text-gray-500">
-            Group Name: {item.className || "kiritilmagan"}
-          </p>
-        </div>
-      </td>
-      <td className="hidden md:table-cell">
-        {item.ketdi ? (
-          <div className="flex items-center">
-            <span>{item.ketdi}</span>
-            <button
-              onClick={() => setEdit(true)}
-              className="ml-2 text-blue-500"
-            >
-              <span style={{ display: edit ? "none" : "block" }}>
-                Set Active
-              </span>
-              {edit && (
-                <DatePicker
-                  selected={null} // No date selected initially
-                  onChange={(date) => handleActiveChange(item, date)} // Handle date change
-                  dateFormat="yyyy-MM-dd"
-                  placeholderText="Select a Date"
-                  className="mr-2 max-w-24"
-                />
+    return (
+      <tr key={item.id} className="border-b border-slate-50 last:border-0 hover:bg-slate-50/80 transition-all group">
+        <td className="p-4">
+          <div className={`flex items-center gap-4 border-l-4 pl-3 ${isInactive ? 'border-red-400' : isActive ? 'border-green-400' : 'border-transparent'}`}>
+            <div className="h-10 w-10 shrink-0">
+              {item.img ? (
+                <img src={item.img} alt="" className="h-full w-full rounded-xl object-cover ring-2 ring-white shadow-sm" />
+              ) : (
+                <div className="h-full w-full rounded-xl bg-slate-100 flex items-center justify-center text-slate-400 font-bold">
+                  {item.firstName.charAt(0)}
+                </div>
               )}
-            </button>
+            </div>
+            <div>
+              <h3 className="font-bold text-slate-800 tracking-tight leading-tight">
+                {item.firstName} {item.lastName}
+              </h3>
+              <p className="text-[11px] text-slate-500 font-medium uppercase tracking-tighter">
+                {item.className || "Unassigned Group"}
+              </p>
+            </div>
           </div>
-        ) : (
-          <div className="flex items-center gap-[-30px]">
-            <DatePicker
-              selected={null} // No date selected initially
-              onChange={(date) => handleDateChange(item, date)} // Handle date change
-              dateFormat="yyyy-MM-dd"
-              placeholderText="Active"
-              className="mr-2 max-w-16"
-            />
-            <p>{item.keldi ? item.keldi : ""}</p>
+        </td>
+
+        <td className="hidden md:table-cell p-4">
+          <div className="flex flex-col gap-1">
+            {isInactive ? (
+              <div className="flex items-center gap-2">
+                <span className="px-2 py-0.5 bg-red-50 text-red-600 rounded text-[10px] font-bold uppercase tracking-wide border border-red-100">Left: {item.ketdi}</span>
+                {editRowId === item.id ? (
+                  <DatePicker
+                    onChange={(date) => updateStatusDate(item.id, date, "status/active", "keldi")}
+                    className="w-24 text-[10px] border rounded bg-white p-1 outline-none border-indigo-200"
+                    placeholderText="Set Active"
+                  />
+                ) : (
+                  <button onClick={() => setEditRowId(item.id)} className="text-[10px] font-bold text-indigo-600 hover:underline">Re-activate</button>
+                )}
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <span className="px-2 py-0.5 bg-green-50 text-green-600 rounded text-[10px] font-bold uppercase tracking-wide border border-green-100">Active</span>
+                <div className="relative group/date">
+                   <MdCalendarToday className="text-slate-300 hover:text-indigo-500 cursor-pointer" />
+                   <div className="absolute left-0 top-0 opacity-0 pointer-events-none group-hover/date:opacity-100 group-hover/date:pointer-events-auto transition-opacity z-20">
+                    <DatePicker
+                        onChange={(date) => updateStatusDate(item.id, date, "status", "keldi")}
+                        className="w-24 text-[10px] border rounded shadow-lg p-1 bg-white"
+                        placeholderText="Change Date"
+                    />
+                   </div>
+                </div>
+                <span className="text-[10px] text-slate-400">{item.keldi}</span>
+              </div>
+            )}
           </div>
-        )}
-      </td>
-      <td
-        className="hidden md:table-cell text-sm"
-        onMouseEnter={() => setHoveredPhone(item.id)}
-        onMouseLeave={() => setHoveredPhone(null)}
-      >
-        {item.phone || "Should be added"}
-        {hoveredPhone === item.id && (
-          <div className="absolute bg-white p-2 z-10">
-            <p className="text-black">
-              Adasi: {item.fatherPhone || "yozilmagan"}
-            </p>
-            <p className="text-black">
-              Oyisi: {item.motherPhone || "yozilmagan"}
-            </p>
+        </td>
+
+        <td className="p-4 relative">
+          <div 
+            className="flex items-center gap-2 text-sm text-slate-600 font-medium cursor-help w-fit"
+            onMouseEnter={() => setHoveredPhone(item.id)}
+            onMouseLeave={() => setHoveredPhone(null)}
+          >
+            <MdPhone className="text-slate-400" />
+            {item.phone || "—"}
+            {hoveredPhone === item.id && (
+              <div className="absolute bottom-full left-4 mb-2 w-48 bg-slate-800 text-white p-3 rounded-xl shadow-xl z-50 text-[11px] animate-in fade-in slide-in-from-bottom-1">
+                <div className="flex flex-col gap-1.5">
+                  <div className="flex justify-between border-b border-slate-700 pb-1 italic uppercase opacity-70">Parent Contacts</div>
+                  <div className="flex justify-between"><span>Father:</span> <span className="font-bold">{item.fatherPhone || "N/A"}</span></div>
+                  <div className="flex justify-between"><span>Mother:</span> <span className="font-bold">{item.motherPhone || "N/A"}</span></div>
+                </div>
+                <div className="absolute -bottom-1 left-4 w-2 h-2 bg-slate-800 rotate-45" />
+              </div>
+            )}
           </div>
-        )}
-      </td>
-      <td>
-        <div className="flex items-center gap-2">
-          <a href={`/students/${item.id}`}>
-            <button className="w-7 h-7 flex items-center justify-center rounded-full bg-lamaSky">
-              <MdRemoveRedEye />
-            </button>
-          </a>
-          {role === "admin" && (
-            <FormModal table="student" type="delete" id={item.id} />
-          )}
-        </div>
-      </td>
-    </tr>
-  );
+        </td>
+
+        <td className="p-4">
+          <div className="flex items-center justify-end gap-2">
+            <a href={`/students/${item.id}`} className="p-2 rounded-xl bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all shadow-sm">
+              <MdRemoveRedEye size={18} />
+            </a>
+            {role === "admin" && (
+              <div className="scale-90 opacity-80 hover:opacity-100 transition-opacity">
+                <FormModal table="student" type="delete" id={item.id} />
+              </div>
+            )}
+          </div>
+        </td>
+      </tr>
+    );
+  }, [role, editRowId, hoveredPhone, updateStatusDate]);
 
   return (
     <AdminLayout>
-      <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
-        {/* TOP */}
-        <div className="flex items-center justify-between">
-          <h1 className="hidden md:block text-lg font-semibold">
-            All Students
-          </h1>
-          <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
-            <div className="flex items-center gap-4 self-end">
-              <input
-                className="bg-transparent border border-gray-300 rounded-md focus:outline-none p-1 focus:border-gray-500"
-                placeholder="Search..."
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)} // Update search query on input change
-              />
-              {role === "admin" && <FormModal table="student" type="create" />}
+      <div className="m-6 bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden flex flex-col">
+        {/* Modern Header */}
+        <div className="px-8 py-6 border-b border-slate-50 bg-gradient-to-r from-white to-slate-50/50 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-black text-slate-900 tracking-tight">Student Roster</h1>
+            <div className="flex items-center gap-2 text-xs text-slate-500 font-medium mt-1 uppercase tracking-widest">
+              <FaInfoCircle className="text-indigo-400" />
+              {filteredStudents.length} Registered Students
             </div>
           </div>
+
+          <div className="flex items-center gap-3">
+            <div className="relative group flex-1 md:w-72">
+              <CgPlayListSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors" size={22} />
+              <input
+                className="w-full bg-white border border-slate-200 rounded-2xl py-2.5 pl-10 pr-4 text-sm outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-400 transition-all shadow-sm"
+                placeholder="Search by name..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+            {role === "admin" && (
+              <div className="shrink-0 text-white rounded-2xl  transition-all  cursor-pointer">
+                <FormModal table="student" type="create" />
+              </div>
+            )}
+          </div>
         </div>
-        {/* LIST */}
-        <Table
-          columns={columns}
-          renderRow={renderRow}
-          data={filteredStudents}
-        />{" "}
-        {/* Use filtered students */}
+
+        {/* Loading/Content states */}
+        <div className="relative min-h-[400px]">
+          {status.isLoading ? (
+            <div className="absolute inset-0 flex items-center justify-center bg-white/50 z-10 backdrop-blur-[1px]">
+               <div className="flex flex-col items-center gap-2">
+                  <div className="h-8 w-8 border-4 border-indigo-100 border-t-indigo-600 rounded-full animate-spin" />
+                  <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Loading Records</span>
+               </div>
+            </div>
+          ) : status.error ? (
+            <div className="p-20 text-center text-red-500 font-medium">{status.error}</div>
+          ) : (
+            <div className="overflow-x-auto">
+              <Table columns={COLUMNS} renderRow={renderRow} data={filteredStudents} />
+              {filteredStudents.length === 0 && (
+                <div className="p-24 text-center">
+                  <FaUser className="mx-auto text-slate-100 mb-4" size={64} />
+                  <p className="text-slate-400 font-medium tracking-tight">No students found matching your criteria</p>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </AdminLayout>
   );
-}
+};
 
 export default StudentListPage;

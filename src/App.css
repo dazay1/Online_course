@@ -10,8 +10,11 @@
   font-family: "Poppins";
   transition: all 0.5s cubic-bezier(0.4, 3, 0.2, 1);
 }
+html {
+  scroll-behavior: smooth;
+}
 body {
-  background-color: #f7f8fa;
+  background-color: #d2d3d552;
 }
 h1 {
   font-size: 80px;
@@ -71,7 +74,7 @@ img {
   border-radius: 8px;
 }
 .backgroundSky {
-  background-image: url('./assets/images//sky.jpeg');
+  background-image: url("./assets/images//sky.jpeg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -86,7 +89,7 @@ img {
     @apply text-lg text-white font-bold mb-4;
   }
   .footer__link {
-    @apply text-sm text-gray-400 hover:text-green-700 cursor-pointer mb-3 w-fit ;
+    @apply text-sm text-gray-400 hover:text-green-700 cursor-pointer mb-3 w-fit;
   }
 }
 @media (max-width: 1300px) {
@@ -190,13 +193,13 @@ img {
 
 .rbc-toolbar button.rbc-active {
   background-color: #dbdafe !important;
-  box-shadow: none !important; 
+  box-shadow: none !important;
 }
 .rbc-time-view {
   border-color: #eee !important;
 }
 .rbc-time-header {
-  display: none !important; 
+  display: none !important;
 }
 .rbc-time-content {
   border: none !important;
@@ -250,4 +253,110 @@ img {
 .rbc-event-label {
   color: gray !important;
   margin-bottom: 5px;
+}
+.width,
+.width2 {
+  width: 100%;
+}
+@media (max-width: 1500px) {
+  .width {
+    max-width: 1000px;
+  }
+  .width2 {
+    max-width: 900px;
+  }
+}
+@media (max-width: 460px) {
+  .full {
+    width: 20rem;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-scaleIn {
+  animation: scaleIn 0.25s ease-out;
+}
+.homework-title {
+  color: #9b51bd;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.homework-title::first-letter {
+  font-size: 42px;
+  font-weight: 700;
+  color: #9b51bd;
+  /* margin-right: 4px; */
+}
+/* Custom Calendar Overrides */
+.rbc-calendar {
+  font-family: 'Inter', sans-serif !important;
+  border: none !important;
+}
+
+.rbc-time-view {
+  border: none !important;
+  background: transparent !important;
+}
+
+.rbc-time-header {
+  margin-right: 0 !important;
+}
+
+.rbc-time-header-content {
+  border-left: none !important;
+}
+
+.rbc-header {
+  border-bottom: 2px solid #f1f5f9 !important;
+  padding: 15px 0 !important;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: #64748b;
+}
+
+.rbc-time-content {
+  border-top: none !important;
+}
+
+.rbc-timeslot-group {
+  border-bottom: 1px solid #f8fafc !important;
+  min-height: 60px !important;
+}
+
+.rbc-time-slot {
+  border: none !important;
+}
+
+/* The Time Column */
+.rbc-time-gutter .rbc-timeslot-group {
+  border: none !important;
+}
+
+.rbc-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #94a3b8;
+}
+
+/* Today's Highlight */
+.rbc-today {
+  background-color: #f8fafc !important;
+}
+
+.rbc-current-time-indicator {
+  background-color: #4f46e5 !important;
+  height: 2px;
 }

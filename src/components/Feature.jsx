@@ -5,7 +5,7 @@ const Feature = () => {
     <div className="pt-16 pb-16 container">
       <div className="mt-8 grid grid-cols-1 xl:grid-cols-2 items-center gap-12 w-[80%] mx-auto">
         {/* Image */}
-          <div data-aos='zoom-in' data-aos-anchor-placement='top-center'>
+          <div data-aos='zoom-in' data-aos-anchor-placement='top-center' className="hidden lg:block">
             <img src={f} alt="image" width={1000} height={1000} />
           </div>
         {/* Text content */}

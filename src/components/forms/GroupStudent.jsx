@@ -14,7 +14,7 @@ const schema = z.object({
   startTime: z.string().min(1, { message: "Time is required" }),
   endTime: z.string().min(1, { message: "Time is required" }),
   firstName: z.string().min(1, { message: "First name is required" }),
-  lastName: z.string().min(1, { message: "Last name is required" }),
+  lastName: z.string().optional(),
   subjects: z.string().min(1, { message: "Subject name is required" }),
   lessonDate: z
     .string()
@@ -37,30 +37,28 @@ const GroupStudent = ({ type, data, setOpen }) => {
   } = useForm({ resolver: zodResolver(schema) });
   const onSubmit = handleSubmit(
     async (data) => {
+      console.log("Form submitted with data:", data.groupName);
       try {
         if (type === "create") {
-          setNumber((prev) => ({
-            ...prev,
-            subjects: data.subjects,
-            startTime: data.startTime,
-            endTime: data.endTime,
-            lessonDate: data.lessonDate,
-            firstName: data.firstName,
-            lastName: data.lastName,
-          }));
-          const date = await fetch(
-            "https://sql-server-nb7m.onrender.com/api/user/group/page",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(number),
-            }
-          );
-          const data = await date.json();
-          const correct = data.message === "Student registered successfully";
-          const exists = data.message === "Student already exists"; // Adjust based on your API response
+          const date = await fetch("https://sql-server-nb7m.onrender.com/api/user/group/page", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              subjects: data.subjects,
+              startTime: data.startTime,
+              endTime: data.endTime,
+              lessonDate: data.lessonDate,
+              firstName: data.firstName,
+              lastName: data.lastName,
+              groupName: data.groupName,
+            }),
+          });
+          const studentData = await date.json();
+          console.log(studentData);
+          const correct = studentData.message === "Group created successfully";
+          const exists = studentData.message === "Student already exists"; // Adjust based on your API response
           if (correct) {
             setOpen(false);
             toast.success("Student registered successfully");
@@ -74,6 +72,7 @@ const GroupStudent = ({ type, data, setOpen }) => {
       } catch (error) {
         toast.error("An error occurred while processing your request.");
       }
+      // You can add your API call here
     },
     (errors) => {
       toast.error("Validation error occured please try again");

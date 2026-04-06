@@ -2,10 +2,11 @@
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import InputField from "../InputField";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import DatePicker from "react-datepicker";
 const schema = z.object({
   username: z
     .string()
@@ -22,19 +23,32 @@ const schema = z.object({
   motherPhone: z.string().optional(),
   sex: z.enum(["male", "female"], { message: "Gender is required" }),
   subjects: z.string().optional(),
+  dateDay: z.date().optional(),
 });
 const StudentForm = ({ type, data, setOpen }) => {
   const { id } = useParams();
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm({ resolver: zodResolver(schema) });
 
   const onSubmit = handleSubmit(
     async (data) => {
+      console.log(data);
       try {
         if (type === "create") {
+          console.log(data);
+          const date = data.dateDay;
+          const day = date.getDate();
+          const month = String(date.getMonth() + 1).padStart(2, "0");
+          const year = date.getFullYear();
+          const formattedDate = `${day}.${month}.${year}`;
+          const formattedData = {
+            ...data,
+            dateDay: formattedDate,
+          };
           const response = await fetch(
             "https://sql-server-nb7m.onrender.com/api/user/student/page",
             {
@@ -42,7 +56,7 @@ const StudentForm = ({ type, data, setOpen }) => {
               headers: {
                 "Content-Type": "application/json",
               },
-              body: JSON.stringify(data),
+              body: JSON.stringify(formattedData),
             }
           );
           const request = await response.json();
@@ -175,21 +189,44 @@ const StudentForm = ({ type, data, setOpen }) => {
           register={register}
           error={errors?.phone}
         />
-        <div className="flex flex-col gap-2 w-full md:w-1/4">
-          <label className="text-xs text-gray-500">Sex</label>
-          <select
-            {...register("sex")}
-            className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
-            defaultValue={type === "create" ? data?.sex : data.user?.sex}
-          >
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-          </select>
-          {errors.sex?.message && (
-            <p className="text-xs text-red-400">
-              {errors.sex?.message.toString()}
-            </p>
-          )}
+        <div className="flex items-center justify-between w-full">
+          <div className="flex flex-col gap-2 w-full md:w-1/4">
+            <label className="text-xs text-gray-500">Sex</label>
+            <select
+              {...register("sex")}
+              className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
+              defaultValue={type === "create" ? data?.sex : data.user?.sex}
+            >
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+            {errors.sex?.message && (
+              <p className="text-xs text-red-400">
+                {errors.sex?.message.toString()}
+              </p>
+            )}
+          </div>
+          <Controller
+            control={control}
+            name="dateDay"
+            defaultValue={
+              type === "create"
+                ? data?.dateDay || null
+                : data.user?.dateDay || null
+            }
+            render={({ field }) => (
+              <DatePicker
+                {...field}
+                selected={field.value}
+                onChange={(date) => field.onChange(date)}
+                dateFormat="yyyy-MM-dd"
+                placeholderText="Select a Date"
+                className="mr-2 max-w-[120px]"
+                onClick={(e) => e.stopPropagation()}
+                autoFocus
+              />
+            )}
+          />
         </div>
       </div>
 

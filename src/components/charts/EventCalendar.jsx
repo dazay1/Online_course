@@ -32,7 +32,7 @@ const events = [
 const EventCalendar = () => {
   const [value, onChange] = useState(new Date());
   return (
-    <div className="bg-white p-4 rounded-md ">
+    <div className="bg-white p-4 rounded-md lg:block hidden">
       <Calendar value={value} onChange={onChange} locale='en-US' className='text-black' />
       <h1 className="text-xl font-semibold my-4 text-black">Events</h1>
       <div className="flex flex-col gap-4">

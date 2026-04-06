@@ -18,7 +18,7 @@ const schema = z.object({
     .min(8, { message: "Password must be at least 8 characters long!" }),
   firstName: z.string().min(1, { message: "First name is required" }),
   lastName: z.string().min(1, { message: "Last name is required" }),
-  phone: z.string().min(1, { message: "Phone number is required" }),
+  phone: z.string().optional(),
   sex: z.enum(["male", "female"], { message: "Gender is required" }),
   subjects: z
     .string(
@@ -28,9 +28,12 @@ const schema = z.object({
         // Add more fields as necessary
       })
     )
-    .optional(), // Make subjects optional if neede
+    .optional(),
+  groupName: z.string().optional(), // Make subjects optional if neede
 });
 const TeacherForm = ({ type, data, setOpen }) => {
+  const teacher = data?.userInfo;
+  const role = teacher?.role;
   const { id } = useParams();
   const {
     register,
@@ -40,6 +43,7 @@ const TeacherForm = ({ type, data, setOpen }) => {
 
   const onSubmit = handleSubmit(
     async (data) => {
+      console.log(data);
       try {
         if (type === "create") {
           const response = await fetch(
@@ -63,9 +67,10 @@ const TeacherForm = ({ type, data, setOpen }) => {
             toast.error("Teacher already exists");
           }
         } else if (type === "update") {
+          console.log(data);
           // Handle the update logic here
           const response = await fetch(
-            `https://sql-server-nb7m.onrender.com/api/user/${id}`,
+            `https://sql-server-nb7m.onrender.com/api/teacher/${id}`,
             {
               method: "PUT",
               headers: {
@@ -93,9 +98,9 @@ const TeacherForm = ({ type, data, setOpen }) => {
   );
   return (
     <form className="flex flex-col gap-8" onSubmit={onSubmit}>
-      <h1 className="text-xl font-semibold">
+      {/* <h1 className="text-xl font-semibold">
         {type === "create" ? "Create" : "Update"} a teacher
-      </h1>
+      </h1> */}
       <span className="text-xs text-gray-400 font-medium">
         Authentication Information
       </span>
@@ -104,7 +109,7 @@ const TeacherForm = ({ type, data, setOpen }) => {
           label="Username"
           name="username"
           defaultValue={
-            type === "create" ? data?.username : data.user?.username
+            role === 'teacher' ? teacher.username : data.user?.username
           }
           register={register}
           error={errors?.username}
@@ -113,7 +118,7 @@ const TeacherForm = ({ type, data, setOpen }) => {
           label="Email"
           name="email"
           type="email"
-          defaultValue={type === "create" ? data?.email : data.user?.email}
+          defaultValue={role === 'teacher' ? teacher.email : data.user?.email}
           register={register}
           error={errors?.email}
         />
@@ -122,7 +127,17 @@ const TeacherForm = ({ type, data, setOpen }) => {
           name="password"
           type="password"
           defaultValue={
-            type === "create" ? data?.password : data.user?.password
+            role === 'teacher' ? teacher.password : data.user?.password
+          }
+          register={register}
+          error={errors?.password}
+        />
+        <InputField
+          label="Group"
+          name="groupName"
+          type="groupName"
+          defaultValue={
+            role === 'teacher' ? teacher.className : data.user?.className
           }
           register={register}
           error={errors?.password}
@@ -136,7 +151,7 @@ const TeacherForm = ({ type, data, setOpen }) => {
           label="First Name"
           name="firstName"
           defaultValue={
-            type === "create" ? data?.firstName : data.user?.firstName
+            role === 'teacher' ? teacher.firstName : data.user?.firstName
           }
           register={register}
           error={errors?.firstName}
@@ -145,7 +160,7 @@ const TeacherForm = ({ type, data, setOpen }) => {
           label="Last Name"
           name="lastName"
           defaultValue={
-            type === "create" ? data?.lastName : data.user?.lastName
+            role === 'teacher' ? teacher.lastName : data.user?.lastName
           }
           register={register}
           error={errors?.lastName}
@@ -153,7 +168,7 @@ const TeacherForm = ({ type, data, setOpen }) => {
         <InputField
           label="Phone"
           name="phone"
-          defaultValue={type === "create" ? data?.phone : data.user?.phone}
+          defaultValue={role === 'teacher' ? teacher.phone : data.user?.phone}
           register={register}
           error={errors?.phone}
         />
@@ -161,7 +176,7 @@ const TeacherForm = ({ type, data, setOpen }) => {
           label="Subjects"
           name="subjects"
           defaultValue={
-            type === "create" ? data?.subjects : data.user?.subjects
+            role === 'teacher' ? teacher.subjects : data.user?.subjects
           }
           register={register}
           error={errors?.phone}
@@ -171,7 +186,7 @@ const TeacherForm = ({ type, data, setOpen }) => {
           <select
             {...register("sex")}
             className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
-            defaultValue={type === "create" ? data?.sex : data.user?.sex}
+            defaultValue={role === 'teacher' ? teacher.sex : data.user?.sex}
           >
             <option value="male">Male</option>
             <option value="female">Female</option>
@@ -184,7 +199,7 @@ const TeacherForm = ({ type, data, setOpen }) => {
         </div>
       </div>
       <button className="bg-blue-400 text-white p-2 rounded-md" type="submit">
-        {type === "create" ? "Create" : "Update"}
+        {role === 'teacher' ? "Create" : "Update"}
       </button>
     </form>
   );

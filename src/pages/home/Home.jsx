@@ -3,9 +3,10 @@ import { Feature, Footer, Navbar } from "../../components";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useEffect } from "react";
-import hero from '../../assets/hero.png'
+import hero from '../../assets/hero.png';
 import { coursesData } from "../../components/data";
 import CourseCard from "../../components/forms/CourseCard";
+
 export default function Home() {
   useEffect(() => {
     const initAOS = async () => {
@@ -18,7 +19,8 @@ export default function Home() {
       });
     };
     initAOS();
-  });
+  }, []); // Add an empty dependency array to run this effect only once
+
   return (
     <>
       <section className="w-full pt-4 md:pt-2 h-full bg-indigo-950">
@@ -46,7 +48,7 @@ export default function Home() {
                   kelajakka tayyorlab, o'z kasblarini topishga yordam beradi
                 </p>
                 {/* Buttons */}
-                <div className="mt-8 flex items-center space-x-4">
+                <div className="mt-8 mb-8 flex items-center space-x-4">
                   <button
                     data-aos="zoom-in"
                     data-aos-delay="300"
@@ -54,36 +56,6 @@ export default function Home() {
                   >
                     Kurslarimiz haqida to'liq ma'lumot olish
                   </button>
-                </div>
-                {/* Stats */}
-                <div className="flex items-center flex-wrap space-x-16 my-8">
-                  <div data-aos="fade-up" data-aos-delay="600">
-                    <p className="md:text-xl lg:text-2xl text-base text-white font-bold ">
-                      260+
-                    </p>
-                    <p className="w-[100px] h-[3px] bg-green-600 mt-2 mb-2 rounded-lg"></p>
-                    <p className="md:text-lg text-sm text-white text-opacity-70">
-                      Tutors
-                    </p>
-                  </div>
-                  <div data-aos="fade-up" data-aos-delay="750">
-                    <p className="md:text-xl lg:text-2xl text-base text-white font-bold ">
-                      2260+
-                    </p>
-                    <p className="w-[100px] h-[3px] bg-blue-600 mt-2 mb-2 rounded-lg"></p>
-                    <p className="md:text-lg text-sm text-white text-opacity-70">
-                      Students
-                    </p>
-                  </div>
-                  <div data-aos="fade-up" data-aos-delay="900">
-                    <p className="md:text-xl lg:text-2xl text-base text-white font-bold ">
-                      60+
-                    </p>
-                    <p className="w-[100px] h-[3px] bg-pink-600 mt-2 mb-2 rounded-lg"></p>
-                    <p className="md:text-lg text-sm text-white text-opacity-70">
-                      Courses
-                    </p>
-                  </div>
                 </div>
               </div>
               {/* ImageContent */}
@@ -98,8 +70,8 @@ export default function Home() {
           </div>
         </div>
       </section>
-      {/* About */}
-      <div className="container">
+      {/* About Section */}
+      <div className="container" id="benefits">
         <div className="pt-20 pb-20 ">
           {/* define grid */}
           <div className="w-4/5 mx-auto grid grid-cols-1 lg:grid-cols-2 items-center gap-16">
@@ -140,7 +112,7 @@ export default function Home() {
                   <h1 className="text-xl md:text-2xl text-black text-opacity-70 mb-3 font-bold">
                     Moslashuvchan jadval
                   </h1>
-                  <p className="w-[90%] lg:w-[70%] text-base  text-black text-opacity-60">
+                  <p className="w-[90%] lg:w-[70%] text-base text-black text-opacity-60">
                     O'zingizga mos kun va vaqtni tanlab darslarga qatnashingiz
                     mumkin
                   </p>
@@ -165,11 +137,11 @@ export default function Home() {
           </div>
         </div>
       </div>
-      {/* Courses */}
-      <div className="pt-16 pb-12 relative bg-gray-200">
+      {/* Courses Section */}
+      <div className="pt-16 pb-12 relative bg-gray-200" id="courses">
         <div className="container">
           <div className="w-[80%] pt-8 pb-8 mx-auto">
-            <h1 className="text-4xl md:text-5xl text-gray-900 font-bold">
+            <h1 className="text-3xl md:text-5xl text-gray-900 font-bold">
               O'quv kurslarimiz
             </h1>
             <div className="md:mt-16 mt-10 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-10">
@@ -190,7 +162,6 @@ export default function Home() {
         </div>
       </div>
       {/* Feature */}
-      <Feature />
       <Footer />
     </>
   );

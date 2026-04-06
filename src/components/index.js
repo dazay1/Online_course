@@ -278,7 +278,7 @@ export const scheduleData = [
 ];
 
 export { default as Login } from "./Login";
-export { default as Navbar } from "./Navbar";
+export { default as Navbar } from "./navbar/Navbar.jsx";
 export { default as Feature } from "./Feature";
 export { default as NotFound } from "./NotFound";
 export { default as SignUp } from "./SignUp";
@@ -301,3 +301,4 @@ export { default as TeacherForm } from "./forms/TeacherForm";
 export { default as StudentForm } from "./forms/StudentForm";
 export { default as GroupForm } from "./forms/GroupForm";
 export { default as AttendanceTable } from "./charts/AttendanceTable";
+export { default as Grade } from "./Grade.jsx";

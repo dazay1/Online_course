@@ -21,7 +21,7 @@ const AttendanceTable = ({ selectedTab }) => {
     const fetchData = async () => {
       try {
         const Groupresponse = await fetch(
-          "https://sql-server-nb7m.onrender.com/api/group"
+          "https://sql-server-nb7m.onrender.com/api/group",
         );
         const data = await Groupresponse.json();
 
@@ -30,16 +30,17 @@ const AttendanceTable = ({ selectedTab }) => {
           .filter((item) => item.name === selectedTab)
           .map((item) => item.day)[0]; // Get the first matching day's string
 
+        if (!lessonDaysString) return;
         // Convert lesson days string to an array of day numbers
         const lessonDays = convertDaysStringToArray(lessonDaysString);
 
         const teacherName = data.filter(
           (item) =>
             item.role === "teacher" &&
-            `${item.id}` === `${userInfo.userInfo.id}`
+            `${item.id}` === `${userInfo.userInfo.id}`,
         );
         const teacher = data.filter(
-          (item) => item.role === "teacher" && `${item.classId}` === `${id}`
+          (item) => item.role === "teacher" && `${item.classId}` === `${id}`,
         );
         const students = data.filter((item) => {
           return (
@@ -52,7 +53,7 @@ const AttendanceTable = ({ selectedTab }) => {
         setStudents(students);
         setTeacher(teacher);
         const attendanceResponse = await fetch(
-          "https://sql-server-nb7m.onrender.com/api/attendance"
+          "https://sql-server-nb7m.onrender.com/api/attendance",
         );
         const attendanceRecords = await attendanceResponse.json();
         setAttendanceData(attendanceRecords);
@@ -70,7 +71,7 @@ const AttendanceTable = ({ selectedTab }) => {
           const futureDate = new Date(currentYear, currentMonth, day);
           if (lessonDays.includes(futureDate.getDay())) {
             // Check if the day is in lessonDays
-            futureDatesArray.push(futureDate.toLocaleDateString());
+            futureDatesArray.push(futureDate.toISOString().split("T")[0]);
           }
         }
         setFutureDates(futureDatesArray);
@@ -95,10 +96,13 @@ const AttendanceTable = ({ selectedTab }) => {
       Sun: 0,
     };
 
-    return daysString
-      .split(", ")
-      .map((day) => daysMap[day.trim()])
-      .filter((day) => day !== undefined);
+    return daysString.split(", ").reduce((acc, day) => {
+      const parsedDay = daysMap[day.trim()];
+      if (parsedDay !== undefined) {
+        acc.push(parsedDay);
+      }
+      return acc;
+    }, []);
   };
 
   const handleIconClick = (studentId, date, status, classId) => {
@@ -134,7 +138,7 @@ const AttendanceTable = ({ selectedTab }) => {
             status: editingRecord.status,
             classId: editingRecord.classId,
           }),
-        }
+        },
       );
 
       if (response.ok) {
@@ -145,14 +149,14 @@ const AttendanceTable = ({ selectedTab }) => {
                 !(
                   r.student_id === editingRecord.studentId &&
                   r.attendance_date.split("T")[0] === editingRecord.date
-                )
+                ),
             )
             .concat({
               student_id: editingRecord.studentId,
               attendance_date: editingRecord.date,
               status: editingRecord.status,
               classId: id,
-            })
+            }),
         );
         setEditingRecord(null);
         toast.success("Attendance updated successfully!");
@@ -177,7 +181,7 @@ const AttendanceTable = ({ selectedTab }) => {
                 studentId,
                 date,
                 "present",
-                id || teacherName.classId
+                id || teacherName.classId,
               )
             }
           />
@@ -191,7 +195,7 @@ const AttendanceTable = ({ selectedTab }) => {
                 studentId,
                 date,
                 "absent",
-                id || teacherName.classId
+                id || teacherName.classId,
               )
             }
           />
@@ -205,7 +209,7 @@ const AttendanceTable = ({ selectedTab }) => {
                 studentId,
                 date,
                 "late",
-                id || teacherName.classId
+                id || teacherName.classId,
               )
             }
           />
@@ -219,7 +223,7 @@ const AttendanceTable = ({ selectedTab }) => {
                 studentId,
                 date,
                 "absent",
-                id || teacherName.classId
+                id || teacherName.classId,
               )
             }
           />
@@ -228,78 +232,89 @@ const AttendanceTable = ({ selectedTab }) => {
   };
 
   return (
-    <div className="attendance-container">
+    <div className="attendance-wrapper">
       {editingRecord && (
         <div className="modal-overlay">
           <div className="modal">
-            <h3>Confirm Attendance</h3>
-            <p>Student ID: {editingRecord.studentId}</p>
-            <p>Date: {editingRecord.date}</p>
+            <h3>Update Attendance</h3>
+            <div className="modal-content">
+              <p>
+                <strong>Student ID:</strong> {editingRecord.studentId}
+              </p>
+              <p>
+                <strong>Date:</strong> {editingRecord.date}
+              </p>
+            </div>
+
             <select
               value={editingRecord.status}
               onChange={handleStatusChange}
               className="status-select"
             >
-              <option value="absent">Kemadi</option>
-              <option value="present">Keldi</option>
-              <option value="late">Sababli</option>
+              <option value="present">Present (Keldi)</option>
+              <option value="absent">Absent (Kemadi)</option>
+              <option value="late">Late (Sababli)</option>
             </select>
+
             <div className="modal-actions">
-              <button onClick={() => setEditingRecord(null)}>Cancel</button>
-              <button onClick={handleSubmit}>Confirm</button>
+              <button
+                className="btn-secondary"
+                onClick={() => setEditingRecord(null)}
+              >
+                Cancel
+              </button>
+              <button className="btn-primary" onClick={handleSubmit}>
+                Save
+              </button>
             </div>
           </div>
         </div>
       )}
-      <div className="table-responsive">
-        <table className="w-full mt-4 attendance-table">
+
+      <div className="table-container">
+        <table className="attendance-table">
           <thead>
-            <tr className="text-left text-gray-500 text-sm gap-10">
-              <th className="sticky left-0 bg-white z-10">Student Name</th>
-              {futureDates.map((date) => (
-                <th key={date}>{date}</th>
-              ))}
+            <tr>
+              <th className="sticky-col">Student</th>
+              {futureDates.map((date) => {
+                const formatted = new Date(date).toLocaleDateString("en-GB", {
+                  day: "2-digit",
+                  month: "long",
+                });
+                return <th key={date}>{formatted}</th>;
+              })}
             </tr>
           </thead>
+
           <tbody>
             {students.map((student) => (
-              <tr
-                key={student.id}
-                className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight"
-              >
-                <td className="flex items-center gap-4 p-4 sticky left-0 bg-white z-10">
+              <tr key={student.id}>
+                <td className="student-cell sticky-col">
                   {student.img ? (
-                    <img
-                      src={student.img}
-                      alt=""
-                      width={40}
-                      height={40}
-                      className="w-10 h-10 rounded-full object-cover"
-                    />
+                    <img src={student.img} alt="" className="student-avatar" />
                   ) : (
-                    <FaUser className="w-10 h-10 rounded-full object-cover text-lamaSky" />
+                    <FaUser className="avatar-icon" />
                   )}
-                  <div className="flex flex-col">
-                    <h3 className="font-semibold">
+                  <div>
+                    <div className="student-name">
                       {student.firstName} {student.lastName}
-                    </h3>
-                    <p className="text-xs text-gray-500">{student?.email}</p>
+                    </div>
+                    <div className="student-email">{student.email}</div>
                   </div>
                 </td>
+
                 {futureDates.map((date) => {
-                  const [day, month, year] = date.split(".");
-                  const formattedDate = `${year}-${month}-${day}`;
                   const record = attendanceData.find(
                     (r) =>
                       r.student_id === student.id &&
-                      r.attendance_date.split("T")[0] === formattedDate
+                      r.attendance_date.split("T")[0] === date,
                   );
+
                   const status = record ? record.status : "null";
+
                   return (
-                    <td key={`${student.id}-${date}`}>
-                      <div className="flex justify-center">
-                        {getStatusIcon(status, student.id, formattedDate)}
-                      </div>
+                    <td key={`${student.id}-${date}`} className="status-cell">
+                      {getStatusIcon(status, student.id, date)}
                     </td>
                   );
                 })}
@@ -308,76 +323,138 @@ const AttendanceTable = ({ selectedTab }) => {
           </tbody>
         </table>
       </div>
+
       <style jsx>{`
-        .attendance-container {
-          padding: 20px;
-          max-width: 1600px;
+        .table-container {
           overflow-x: auto;
         }
-        .table-responsive {
-          overflow-x: auto;
-        }
+
         .attendance-table {
           width: 100%;
           border-collapse: collapse;
-          margin-top: 20px;
+          font-size: 14px;
         }
-        .attendance-table th,
-        .attendance-table td {
-          padding: 10px;
-          border: 1px solid #ddd;
-          text-align: left;
-        }
+
         .attendance-table th {
-          background-color: #f2f2f2;
-          position: sticky;
-          top: 0;
+          background: #f9fafb;
+          padding: 12px;
+          font-weight: 600;
+          color: #374151;
+          border-bottom: 1px solid #e5e7eb;
         }
+
+        .attendance-table td {
+          padding: 12px;
+          border-bottom: 1px solid #f1f5f9;
+        }
+
+        .attendance-table tr:hover {
+          background: #f8fafc;
+        }
+
+        .sticky-col {
+          position: sticky;
+          left: 0;
+          background: white;
+          z-index: 5;
+        }
+
+        .student-cell {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .student-avatar {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+
+        .avatar-icon {
+          font-size: 28px;
+          color: #9ca3af;
+        }
+
+        .student-name {
+          font-weight: 500;
+          color: #111827;
+        }
+
+        .student-email {
+          font-size: 12px;
+          color: #9ca3af;
+        }
+
+        .status-cell {
+          text-align: center;
+          cursor: pointer;
+        }
+
         .modal-overlay {
           position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: rgba(0, 0, 0, 0.5);
+          inset: 0;
+          background: rgba(0, 0, 0, 0.4);
           display: flex;
           justify-content: center;
           align-items: center;
           z-index: 1000;
         }
+
         .modal {
           background: white;
-          padding: 20px;
-          border-radius: 8px;
-          width: 300px;
+          padding: 25px;
+          border-radius: 12px;
+          width: 350px;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
         }
+
+        .modal h3 {
+          font-size: 18px;
+          margin-bottom: 15px;
+          color: #111827;
+        }
+
+        .status-select {
+          width: 100%;
+          padding: 10px;
+          margin-top: 15px;
+          border-radius: 8px;
+          border: 1px solid #d1d5db;
+        }
+
         .modal-actions {
           display: flex;
           justify-content: flex-end;
           gap: 10px;
-        }
-        .status-select {
-          margin: 15px 0;
-          padding: 8px;
-          width: 100%;
-        }
-        .attendance-cell {
-          display: flex;
-          align-items: center;
-          gap: 8px;
+          margin-top: 20px;
         }
 
-        .edit-button {
-          padding: 2px 8px;
-          background-color: #f0f0f0;
-          border: 1px solid #ccc;
-          border-radius: 4px;
+        .btn-primary {
+          background: #2563eb;
+          color: white;
+          padding: 8px 16px;
+          border-radius: 8px;
+          border: none;
           cursor: pointer;
-          font-size: 12px;
         }
 
-        .edit-button:hover {
-          background-color: #e0e0e0;
+        .btn-primary:hover {
+          background: #1d4ed8;
+        }
+
+        .btn-secondary {
+          background: #e5e7eb;
+          color: #374151;
+          padding: 8px 16px;
+          border-radius: 8px;
+          border: none;
+          cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+          background: #d1d5db;
         }
       `}</style>
     </div>

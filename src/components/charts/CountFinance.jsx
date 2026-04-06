@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+"use client";
+import { useEffect, useState, useMemo } from "react";
 import {
   AreaChart,
   Area,
@@ -9,127 +10,92 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-export default function CountFinance() {
-  const [students, setStudents] = useState([]);
-  const [data, setData] = useState([
-    { name: "Avg", uv: 0, pv: 0, amt: 0 }, // Only keep Avg for August
-  ]);
+// In-memory cache for API data
+let cachedData = null;
 
+const CountFinance = () => {
+  const [students, setStudents] = useState([]);
+  const [status, setStatus] = useState({ isLoading: false, error: null });
+
+  // Fetch data once on mount
   useEffect(() => {
     const fetchStudents = async () => {
-      const response = await fetch(
-        "https://sql-server-nb7m.onrender.com/api/payment"
-      );
-      const data = await response.json();
-      setStudents(data);
+      if (cachedData) {
+        setStudents(cachedData);
+        setStatus({ isLoading: false, error: null });
+        return;
+      }
 
-      const getPaymentAmount = (monthName) => {
-        if (monthName === "july") {
-          const amounts = students
-            .map((item) => {
-              // Check if item.june is a valid string
-              if (typeof item.july === "string") {
-                // Replace "." with "" and "," with "." for proper float conversion
-                return parseFloat(item.july.replace(".", "").replace(",", "."));
-              }
-              // If item.june is not a string, return 0 or handle it as needed
-              return 0; // or return NaN, or any other default value
-            })
-            .filter((amount) => !isNaN(amount)); // Filter out NaN values
-          // Sum the amounts
-          const total = amounts.reduce(
-            (total, currentAmount) => total + currentAmount,
-            0
-          );
-          return total;
-        } else if (monthName === "aug") {
-          const amounts = students
-            .map((item) => {
-              // Check if item.june is a valid string
-              if (typeof item.aug === "string") {
-                // Replace "." with "" and "," with "." for proper float conversion
-                return parseFloat(item.aug.replace(".", "").replace(",", "."));
-              }
-              // If item.june is not a string, return 0 or handle it as needed
-              return 0; // or return NaN, or any other default value
-            })
-            .filter((amount) => !isNaN(amount)); // Filter out NaN values
-          // Sum the amounts
-          const total = amounts.reduce(
-            (total, currentAmount) => total + currentAmount,
-            0
-          );
-          return total;
-        } else if (monthName === "sep") {
-          const amounts = students
-            .map((item) => {
-              // Check if item.june is a valid string
-              if (typeof item.sep === "string") {
-                // Replace "." with "" and "," with "." for proper float conversion
-                return parseFloat(item.sep.replace(".", "").replace(",", "."));
-              }
-              // If item.june is not a string, return 0 or handle it as needed
-              return 0; // or return NaN, or any other default value
-            })
-            .filter((amount) => !isNaN(amount)); // Filter out NaN values
-          // Sum the amounts
-          const total = amounts.reduce(
-            (total, currentAmount) => total + currentAmount,
-            0
-          );
-          return total;
-        }
-        // Return 0 or another default value for other months
-        return 0;
-      };
-
-      // Update the data state with the sum of payments for August only
-      setData([
-        {
-          name: "Iyul", // Only show Avg for August
-          uv: getPaymentAmount("july"),
-          pv: 0, // Set pv to 0 since we are not using it
-          amt: 0,
-        },
-        {
-          name: "Avg", // Only show Avg for August
-          uv: getPaymentAmount("aug"),
-          pv: 0, // Set pv to 0 since we are not using it
-          amt: 0,
-        },
-        {
-          name: "Sep", // Only show Avg for August
-          uv: getPaymentAmount("sep"),
-          pv: 0, // Set pv to 0 since we are not using it
-          amt: 0,
-        },
-      ]);
+      setStatus({ isLoading: true, error: null });
+      try {
+        const response = await fetch("https://sql-server-nb7m.onrender.com/api/payment", {
+          headers: { "Cache-Control": "no-cache" },
+        });
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+        const data = await response.json();
+        cachedData = data;
+        setStudents(data);
+        setStatus({ isLoading: false, error: null });
+      } catch (error) {
+        console.error("Error fetching payment data:", error);
+        setStatus({ isLoading: false, error: "Failed to load payment data." });
+      }
     };
     fetchStudents();
+  }, []);
+
+  // Memoized chart data
+  const chartData = useMemo(() => {
+    if (students.length === 0) {
+      return [
+        { name: "Iyul", uv: 0, pv: 0, amt: 0 },
+        { name: "Avg", uv: 0, pv: 0, amt: 0 },
+        { name: "Sent", uv: 0, pv: 0, amt: 0 },
+      ];
+    }
+
+    const getPaymentAmount = (monthName) => {
+      const monthField = { july: "july", aug: "aug", sep: "sep" }[monthName];
+      if (!monthField) return 0;
+
+      return students.reduce((total, item) => {
+        const value = item[monthField];
+        if (typeof value === "string" && value.trim() !== "") {
+          const parsed = parseFloat(value.replace(".", "").replace(",", "."));
+          return !isNaN(parsed) ? total + parsed : total;
+        }
+        return total;
+      }, 0);
+    };
+
+    return [
+      { name: "Iyul", uv: getPaymentAmount("july"), pv: 0, amt: 0 },
+      { name: "Avg", uv: getPaymentAmount("aug"), pv: 0, amt: 0 },
+      { name: "Sent", uv: getPaymentAmount("sep"), pv: 0, amt: 0 },
+    ];
   }, [students]);
 
   return (
     <div className="bg-white rounded-xl h-full p-4">
       <h1 className="text-lg font-semibold text-black">To'lov ro'yxati</h1>
-      <ResponsiveContainer width="100%" height="100%">
-        <AreaChart
-          width={500}
-          height={400}
-          data={data}
-          margin={{
-            top: 10,
-            right: 30,
-            left: 0,
-            bottom: 0,
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Area type="monotone" dataKey="uv" stroke="#8884d8" fill="#8884d8" />
-        </AreaChart>
-      </ResponsiveContainer>
+      {status.isLoading && <p className="text-gray-500 text-center">Loading...</p>}
+      {status.error && <p className="text-red-500 text-center">{status.error}</p>}
+      {!status.isLoading && !status.error && (
+        <ResponsiveContainer width="100%" height="95%">
+          <AreaChart
+            data={chartData}
+            margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" stroke="#ddd" />
+            <XAxis dataKey="name" tick={{ fill: "#d1d5db" }} tickLine={false} axisLine={false} />
+            <YAxis tick={{ fill: "#d1d5db" }} tickLine={false} axisLine={false} />
+            <Tooltip contentStyle={{ borderRadius: "10px", borderColor: "lightgray" }} />
+            <Area type="monotone" dataKey="uv" stroke="#8884d8" fill="#8884d8" />
+          </AreaChart>
+        </ResponsiveContainer>
+      )}
     </div>
   );
-}
+};
+
+export default CountFinance;
